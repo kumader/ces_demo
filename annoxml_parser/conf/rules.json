@@ -1,0 +1,4 @@
+{
+    "hot":[ "crosswalk", "pedestrian", "car", "truck", "bicycle", "roundabout", "interesting", "bridge", "animal", "tunnel", "construction zone" ],
+    "cold": [ "raining", "sunny", "road cone", "speed sign", "rare moving object", "rare static object" ]
+}

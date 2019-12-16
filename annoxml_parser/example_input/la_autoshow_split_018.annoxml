@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document timestamp_unit="microseconds">
+	<fileTitle></fileTitle>
+	<fileDesc></fileDesc>
+	<sceneFile>la_autoshow_low_split_018.dat</sceneFile>
+	<fileType>cdr.anno.smgr.eb</fileType>
+	<fileVersion>1.0.0</fileVersion>
+	<creationTimestampUTC unit="seconds" epoch="unix">1574847856</creationTimestampUTC>
+	<fileOffset>33639</fileOffset>
+	<fileDuration>68742681</fileDuration>
+	<additionalSceneInfo>
+		<driverName></driverName>
+		<date>2019-11-27 (Nov, Wed)</date>
+		<weather>undefined</weather>
+		<temperature></temperature>
+		<temperatureUnit>Celsius</temperatureUnit>
+	</additionalSceneInfo>
+	<events>
+		<event>
+			<timestamp>33644</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>recording_start</annotation>
+		</event>
+		<event>
+			<timestamp>411072</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 13:44:17] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+	</events>
+</document>

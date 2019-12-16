@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<document timestamp_unit="microseconds">
+	<fileTitle></fileTitle>
+	<fileDesc></fileDesc>
+	<sceneFile>la_autoshow_low_split_003.dat</sceneFile>
+	<fileType>cdr.anno.smgr.eb</fileType>
+	<fileVersion>1.0.0</fileVersion>
+	<creationTimestampUTC unit="seconds" epoch="unix">1574761036</creationTimestampUTC>
+	<fileOffset>31790</fileOffset>
+	<fileDuration>39194931</fileDuration>
+	<additionalSceneInfo>
+		<driverName></driverName>
+		<date>2019-11-26 (Nov, Tue)</date>
+		<weather>undefined</weather>
+		<temperature></temperature>
+		<temperatureUnit>Celsius</temperatureUnit>
+	</additionalSceneInfo>
+	<events>
+		<event>
+			<timestamp>31799</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>recording_start</annotation>
+		</event>
+	</events>
+</document>

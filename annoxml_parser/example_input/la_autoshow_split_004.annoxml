@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<document timestamp_unit="microseconds">
+	<fileTitle></fileTitle>
+	<fileDesc></fileDesc>
+	<sceneFile>la_autoshow_low_split_004.dat</sceneFile>
+	<fileType>cdr.anno.smgr.eb</fileType>
+	<fileVersion>1.0.0</fileVersion>
+	<creationTimestampUTC unit="seconds" epoch="unix">1574761076</creationTimestampUTC>
+	<fileOffset>12442</fileOffset>
+	<fileDuration>100091240</fileDuration>
+	<additionalSceneInfo>
+		<driverName></driverName>
+		<date>2019-11-26 (Nov, Tue)</date>
+		<weather>undefined</weather>
+		<temperature></temperature>
+		<temperatureUnit>Celsius</temperatureUnit>
+	</additionalSceneInfo>
+	<events>
+		<event>
+			<timestamp>12448</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>recording_start</annotation>
+		</event>
+		<event>
+			<timestamp>14302578</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>bike</annotation>
+		</event>
+		<event>
+			<timestamp>50903957</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>construction zone</annotation>
+		</event>
+		<event>
+			<timestamp>60262171</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>construction zone</annotation>
+		</event>
+		<event>
+			<timestamp>65316980</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>rare static object</annotation>
+		</event>
+		<event>
+			<timestamp>74958991</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>rare static object</annotation>
+		</event>
+		<event>
+			<timestamp>75399870</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>construction zone</annotation>
+		</event>
+	</events>
+</document>

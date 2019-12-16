@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<document timestamp_unit="microseconds">
+	<fileTitle></fileTitle>
+	<fileDesc></fileDesc>
+	<sceneFile>la_autoshow_low_split_016.dat</sceneFile>
+	<fileType>cdr.anno.smgr.eb</fileType>
+	<fileVersion>1.0.0</fileVersion>
+	<creationTimestampUTC unit="seconds" epoch="unix">1574847585</creationTimestampUTC>
+	<fileOffset>247022046</fileOffset>
+	<fileDuration>120137991</fileDuration>
+	<additionalSceneInfo>
+		<driverName></driverName>
+		<date>2019-11-27 (Nov, Wed)</date>
+		<weather>undefined</weather>
+		<temperature></temperature>
+		<temperatureUnit>Celsius</temperatureUnit>
+	</additionalSceneInfo>
+	<events>
+		<event>
+			<timestamp>247022054</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>recording_start</annotation>
+		</event>
+		<event>
+			<timestamp>257317399</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>rare static object</annotation>
+		</event>
+		<event>
+			<timestamp>288264661</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>bridge</annotation>
+		</event>
+		<event>
+			<timestamp>303353233</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>animal</annotation>
+		</event>
+		<event>
+			<timestamp>312712019</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>tunnel</annotation>
+		</event>
+		<event>
+			<timestamp>332544074</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>rare moving object</annotation>
+		</event>
+	</events>
+</document>

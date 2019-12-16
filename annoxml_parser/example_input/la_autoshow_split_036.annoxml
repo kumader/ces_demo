@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<document timestamp_unit="microseconds">
+	<fileTitle></fileTitle>
+	<fileDesc></fileDesc>
+	<sceneFile>la_autoshow_low_split_036.dat</sceneFile>
+	<fileType>cdr.anno.smgr.eb</fileType>
+	<fileVersion>1.0.0</fileVersion>
+	<creationTimestampUTC unit="seconds" epoch="unix">1575351716</creationTimestampUTC>
+	<fileOffset>120263652</fileOffset>
+	<fileDuration>120055753</fileDuration>
+	<additionalSceneInfo>
+		<driverName></driverName>
+		<date>2019-12-03 (Dec, Tue)</date>
+		<weather>undefined</weather>
+		<temperature></temperature>
+		<temperatureUnit>Celsius</temperatureUnit>
+	</additionalSceneInfo>
+	<events>
+		<event>
+			<timestamp>120263662</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>recording_start</annotation>
+		</event>
+		<event>
+			<timestamp>126308277</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:02] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>128311470</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:04] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>143336235</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:19] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>164369589</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:40] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>166374501</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:42] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>170131774</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:46] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>172136448</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:48] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>174390830</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:42:50] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>184660148</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:01] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>193174557</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:09] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>201939112</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:18] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>203942537</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:20] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>206196449</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:22] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>207950294</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:24] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>212208305</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:28] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>212458632</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:28] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>237499260</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:53] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+		<event>
+			<timestamp>239503467</timestamp>
+			<name>CDR-Annotation</name>
+			<annotation>[ 09:43:55] EB device: Can_1_EB_MainFunction_BusOff: CC6 error counter has reached ERROR_PASSIVE level (4095)</annotation>
+		</event>
+	</events>
+</document>
