@@ -1,0 +1,39 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_Py_INTz_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1026", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Tx_Py_INTz_tmix" 	  		       	=> { type => "uint2", init => 0, bitfield => 16 }
+              };
+$enums = {
+          Register_e => {
+			   T1_P0_INT0 => "0x1026"
+			 , T1_P0_INT1 => "0x1028"
+			 , T1_P1_INT0 => "0x1034"
+			 , T1_P1_INT1 => "0x1036"
+			 , T1_P2_INT0 => "0x1042"
+			 , T1_P2_INT1 => "0x1044"
+			 , T1_P3_INT0 => "0x1050"
+			 , T1_P3_INT1 => "0x1052"
+			 , T2_P0_INT0 => "0x10a8"
+			 , T2_P0_INT1 => "0x10aa"
+			 , T2_P1_INT0 => "0x10b6"
+			 , T2_P1_INT1 => "0x10b8"
+			 , T2_P2_INT0 => "0x10c4"
+			 , T2_P2_INT1 => "0x10c6"
+			 , T2_P3_INT0 => "0x10d2"
+			 , T2_P3_INT1 => "0x10d4"
+			}
+         }

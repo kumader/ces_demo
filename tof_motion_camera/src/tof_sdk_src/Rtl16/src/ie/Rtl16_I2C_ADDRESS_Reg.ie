@@ -1,0 +1,21 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "I2C_ADDRESS_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1000", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0067", no_logging => true },
+               "0I2C_ADDRESS" 		 	                => { type => "uint2", init => 0, bitfield =>7  },
+               #NOTE: address 0x0032 should not be used
+             };
+

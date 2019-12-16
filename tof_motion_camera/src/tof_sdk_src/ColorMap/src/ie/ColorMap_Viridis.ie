@@ -1,0 +1,16 @@
+###########################################################################
+#     PROJECT: Cpp -- ColorMap
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the ColorMap Viridis specification
+###########################################################################
+
+
+$namespace = "ColorMap";
+$name = "Viridis";
+$attributes = { 
+              };

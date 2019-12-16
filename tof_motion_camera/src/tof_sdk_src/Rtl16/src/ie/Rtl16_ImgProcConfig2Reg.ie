@@ -1,0 +1,22 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "ImgProcConfig2Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1e9", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x10", no_logging => true },
+               "1Reserved" 		  		      	=> { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true },
+               "2Reserved" 		  		      	=> { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true },
+               "3Reserved" 		  		      	=> { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true },
+               "4EnableVerticalStripesWorkaround"	        => { type => "uint2", init => 0, bitfield => 1, convert_to_string => {1 => "1:Enable Vertical Stripes Workaround fore Melexis Sensor/Companion Chip on both Distance and Amplitude Images"} }
+             };

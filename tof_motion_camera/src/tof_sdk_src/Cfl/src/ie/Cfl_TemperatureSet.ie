@@ -1,0 +1,25 @@
+###########################################################################
+#     PROJECT: Cpp -- Cfl 
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the set specification
+###########################################################################
+
+
+$namespace = "Cfl";
+$name = "TemperatureSet";
+$attributes = { 
+               "MainboardTemp_deg" 		        	=> { type => "float", init => "0.0"},
+               "BaseboardTemp_deg" 		        	=> { type => "float", init => "0.0"},
+               "LaserboardTemp_deg" 		        	=> { type => "float", init => "0.0"},
+               "LaserboardTempLimit_deg" 	        	=> { type => "float", init => "0.0"},
+               "LaserboardOverTempFlag" 	        	=> { type => "bool", init => "false"},
+               "LaserboardTempErrorFlag" 	        	=> { type => "bool", init => "false"},
+               "ProcessorTemp_deg" 		        	=> { type => "float", init => "0.0"},
+               "ProcessorSpeed_MHz" 		        	=> { type => "uint2", init => "0"},
+               "ProcessorTooHotFlag"  		        	=> { type => "bool", init => "false"}
+             };

@@ -1,0 +1,1 @@
+SConscript('src/SConscript.armhf',variant_dir='armhf',duplicate=0, exports={'variant_dir':'armhf','src_dir':'src'})

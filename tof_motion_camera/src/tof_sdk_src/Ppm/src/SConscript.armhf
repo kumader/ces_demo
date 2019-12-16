@@ -1,0 +1,119 @@
+#robert on Son Okt  7 21:49:12 CEST 2007
+#scons script to create a library and regression tests
+
+Import('variant_dir') #from exports in SConstruct
+Import('src_dir') #from exports in SConstruct
+
+
+#COMMAND LINE OPTIONS
+opts = Variables('custom.py')
+opts.Add('DEBUG', 'Set to 1 to build for debugging', 1)
+opts.Add('PROFILE', 'Set to 1 to build for profiling', 0)
+opts.Add('OPTIMIZE_SIZE', 'Set to 1 to optimize for size', 0)
+opts.Add('OPTIMIZE_SPEED', 'Set to 1 to optimize for speed', 0)
+opts.Add('TEST_COVERAGE', 'Set to 1 to build for test coverage', 0)
+opts.Add('LOG_LEVEL', 'Set to DEBUG, INFO, WARNING, ERROR', "INFO")
+
+#PACKAGE NAME
+import os
+package_path = os.path.abspath('..')
+package_name = os.path.basename(package_path)
+
+#INCLUDE OTHER PKGS
+packages_root = '../../'
+
+inc_packages   = ['General_inc', 'Common_inc', 'Logger_inc', 'Mat2D_inc','Ppm_inc']
+lib_packages = [
+                 package_name 
+               , 'Mat2D'
+               , 'Logger'
+               , 'Common'
+               ]
+
+include = list()
+for item in inc_packages:
+ object = Dir(packages_root + item +'/' + src_dir)
+ include.append(object)
+
+#LIBS
+libs = list()
+for item in lib_packages:
+ object = Dir(packages_root + item +'/'+ variant_dir)    #REQUIRE libs in variant_dir
+ libs.append(object)
+
+#DEFINE ENVIRONMENT
+env = Environment(options=opts
+                 ,CXX = 'arm-linux-gnueabihf-g++'
+                 ,AR = 'arm-linux-gnueabihf-ar'
+                 ,RANLIB = 'arm-linux-gnueabihf-ranlib'
+                 ,CPPFLAGS = '-Wall '      #removed -O2 for debugging support
+                 ,LINKFLAGS = ''
+                 ,CPPDEFINES='_TARGET_ARCH_ARMHF_'
+                 ,CPPPATH=include
+                 ,LIBPATH=libs
+                 ,ENV={'PATH' : os.environ['PATH']}
+)
+Help(opts.GenerateHelpText(env))
+
+#LOGGING 
+import logging
+loglevel = {"DEBUG":logging.DEBUG, "INFO":logging.INFO, "WARNING":logging.WARNING, "ERROR":logging.ERROR}[env["LOG_LEVEL"]]
+logger   = logging.getLogger(package_name)
+logger.setLevel(loglevel)
+channel  = logging.StreamHandler()
+channel.setLevel(loglevel)
+channel.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+logger.addHandler(channel)
+
+logger.info("working in package %s" %package_name) 
+logger.info("depends on: %s, %s" %(inc_packages, lib_packages)) 
+
+
+# GPROF: need to compile and link with -pg option
+if int(env['PROFILE']) == 1:
+ logger.info("compiling with GPROF support") 
+ env.Append(LINKFLAGS= ' -pg ')
+ env.Append(CPPFLAGS=' -pg ')
+
+# DEBUG need to compile with -g option
+if int(env['DEBUG']) == 1:
+ logger.info("compiling with DEBUG support") 
+ env.Append(CPPFLAGS=' -g ')
+
+# SIZE OPTIMIZATION need to compile with -Os option
+if int(env['OPTIMIZE_SIZE']) == 1:
+ logger.info("compiling with size optimization") 
+ env.Append(CPPFLAGS=' -Os ')
+
+# SPEED OPTIMIZATION need to compile with -O3 option
+if int(env['OPTIMIZE_SPEED']) == 1:
+ logger.info("compiling with speed optimization") 
+ env.Append(CPPFLAGS=' -O3 ')
+
+# TEST COVERAGE need to compile without optimization
+if int(env['TEST_COVERAGE']) == 1:
+ logger.info("compiling with test coverage") 
+ env.Append(CPPFLAGS=' -fprofile-arcs -ftest-coverage ')
+
+
+#SOURCE FILES EXCEPT TESTS
+#FIXME: BuildDir changes path to buildpath
+files = os.listdir('../' + src_dir)
+
+sources = list()
+for name in files:
+ if name.find('test') >= 0: continue
+ if name.find('Test') >= 0: continue
+ if name.find('.cpp') >= 0:               #REQUIRE cpp code
+   sources.append(name)
+
+logger.debug("found sources: %s" %sources) 
+
+#MAKE LIBRARY
+targetname = 'lib' + package_name 
+if len(sources): env.Library(target=targetname,source=sources)
+
+#MAKE REGRESSIONTEST
+env.Program(target="RegressionTest_Ppm_FileController",source="RegressionTest_Ppm_FileController.cpp",LIBS=lib_packages)
+
+logger.debug("finished in package %s" %package_name) 

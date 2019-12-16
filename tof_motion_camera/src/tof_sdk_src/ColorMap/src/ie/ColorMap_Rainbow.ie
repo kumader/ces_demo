@@ -1,0 +1,18 @@
+###########################################################################
+#     PROJECT: Cpp -- ColorMap
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the ColorMap Rainbow specification
+###########################################################################
+
+
+$namespace = "ColorMap";
+$name = "Rainbow";
+$attributes = { 
+               "Vector"              => { type => "Rainbow::Vector_t", init =>"Rainbow::Vector_t()", no_getset=>true },
+               "Idx"                 => { type => "Rainbow::Idx_t", init => "Rainbow::Idx_t()", no_getset=>true },
+              };

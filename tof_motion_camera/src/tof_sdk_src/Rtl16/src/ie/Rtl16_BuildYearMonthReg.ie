@@ -1,0 +1,20 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "BuildYearMonthReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x3d", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Month"						=> { type => "uint2", init => 0, bitfield =>4  },
+               "4Year"						=> { type => "uint2", init => 0, bitfield =>12  },
+             };

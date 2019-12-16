@@ -1,0 +1,18 @@
+###########################################################################
+#     PROJECT: Cpp -- ColorMap
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the ColorMap Gray specification
+###########################################################################
+
+
+$namespace = "ColorMap";
+$name = "Gray";
+$attributes = { 
+               "Vector"              => { type => "Gray::Vector_t", init =>"Gray::Vector_t()", no_getset=>true },
+               "Idx"                 => { type => "Gray::Idx_t", init => "Gray::Idx_t()", no_getset=>true },
+              };

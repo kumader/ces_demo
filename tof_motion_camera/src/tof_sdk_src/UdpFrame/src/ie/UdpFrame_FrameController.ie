@@ -1,0 +1,22 @@
+###########################################################################
+#     PROJECT: Cpp -- UdpFrame
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Udp FrameController specification
+###########################################################################
+
+
+$namespace = "UdpFrame";
+$name = "FrameController";
+$nameid = 3001;
+$attributes = { 
+               "SecondsTimeout"     => { type => "uint4", init => 0 },
+               "MicroSecondsTimeout"=> { type => "uint4", init => 0 },
+               "LocalUdpPort"       => { type => "uint2", init => 93 },
+               "UdpSocket"          => { type => "IO::Socket", init => "IO::Socket()" },
+               "UdpSelect"          => { type => "IO::SelectWithSockets", init => "IO::SelectWithSockets()" },
+             };

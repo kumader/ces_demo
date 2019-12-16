@@ -1,0 +1,34 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "StatusReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x3", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "1Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "2OngoingCalibration" 				=> { type => "uint2", init => 0, bitfield =>1  },
+               "3IlluminationTemperatureSensorError" 		=> { type => "uint2", init => 0, bitfield =>1  },
+               "4TofSensorTemperatureSensorError" 		=> { type => "uint2", init => 0, bitfield =>1  },
+               "5CalibrationDataMissing" 			=> { type => "uint2", init => 0, bitfield =>1  },
+               "6FactoryRegMapWasLoaded" 			=> { type => "uint2", init => 0, bitfield =>1  },
+               "7Reserved"	 				=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "8PreviousFirmwareVersionWasRestored" 		=> { type => "uint2", init => 0, bitfield =>1  },
+               "9IlluminationOverTemperature" 			=> { type => "uint2", init => 0, bitfield =>1  },
+               "10Reserved" 					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "11IlluminationError" 				=> { type => "uint2", init => 0, bitfield =>1  },
+               "12Reserved" 					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "13Reserved" 					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "14TofCCTemperatureError" 			=> { type => "uint2", init => 0, bitfield =>1  },
+               "15TofCCPLLConfigurationError"	 		=> { type => "uint2", init => 0, bitfield =>1  }
+             };

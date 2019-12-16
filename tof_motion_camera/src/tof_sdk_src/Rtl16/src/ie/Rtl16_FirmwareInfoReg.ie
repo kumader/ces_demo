@@ -1,0 +1,21 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "FirmwareInfoReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x8", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0RevisionNonFunctional"				=> { type => "uint2", init => 0, bitfield =>6 },
+               "6RevisionMinor"				        => { type => "uint2", init => 0, bitfield =>5 },
+               "11RevisionMajor"			        => { type => "uint2", init => 0, bitfield =>5 },
+             };

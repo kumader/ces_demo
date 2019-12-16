@@ -1,0 +1,18 @@
+###########################################################################
+#     PROJECT: Cpp -- Mat2D
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Mat2D VirtualMat2D specification
+###########################################################################
+
+
+$namespace = "Mat2D";
+$name = "VirtualMat";
+$attributes = { 
+               "Vector"              => { type => "VirtualMat<T>::Vector_t", init =>"VirtualMat<T>::Vector_t()", no_getset=>true },
+               "Idx"                 => { type => "VirtualMat<T>::Idx_t", init => "VirtualMat<T>::Idx_t()", no_getset=>true },
+              };

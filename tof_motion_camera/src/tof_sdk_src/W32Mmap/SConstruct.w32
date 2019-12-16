@@ -1,0 +1,1 @@
+SConscript('src/SConscript.w32',variant_dir='w32',duplicate=0, exports={'variant_dir':'w32','src_dir':'src'})

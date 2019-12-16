@@ -1,0 +1,28 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "CmdEnablePasswdReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x22", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0PasswordForCriticalOperations" 		=> { type => "uint2", init => 0, bitfield =>16
+                                                                   , set => "Password_e"
+                                                                   , convert_to_string => {"0x4877" => "Register map flash operations", "0x5e6b" => "Test commands"   }   }
+             };
+$enums = {
+
+         "Password_e" => { "REGISTERMAP_FLASH_OPERATIONS" => "0x4877"
+			 , "TEST_COMMAND" => "0x5e6b"
+			 }
+         };
+

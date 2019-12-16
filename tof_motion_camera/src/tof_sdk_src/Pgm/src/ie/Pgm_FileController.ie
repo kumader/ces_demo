@@ -1,0 +1,17 @@
+###########################################################################
+#     PROJECT: Cpp -- CppClassCoder
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: an example of a cpp signal class definition file 
+###########################################################################
+
+$namespace = "Pgm";
+$name = "FileController";
+$attributes = { 
+                 NrReads         => { type => "uint4", init => 0  }
+                , NrWrites        => { type => "uint4", init => 0  }
+             };

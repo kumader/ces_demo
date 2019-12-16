@@ -1,0 +1,1 @@
+SConscript('src/SConscript',variant_dir='x86-hostsim',duplicate=0, exports={'variant_dir':'x86-hostsim','src_dir':'src'})

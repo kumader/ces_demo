@@ -1,0 +1,38 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "RgbLedReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x294", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0RgbLedState" 		             	        => { type => "uint2", init => 0, bitfield =>16
+                                                                   , convert_to_string => { 0 => "0:off"
+                                                                                          , 1 => "1:blue"
+                                                                                          , 2 => "2:green"
+                                                                                          , 3 => "3:red"                       
+                                                                                          }
+                                                                   }
+             };
+
+$enums = {
+
+          '' => { NAME_ID => "0x294" },
+
+          RgbLedState_e  => { OFF     => 0
+	    	            , BLUE    => 1
+		            , GREEN   => 2
+                            , RED     => 3
+                            , MAX     => 3
+		            }
+         };
+

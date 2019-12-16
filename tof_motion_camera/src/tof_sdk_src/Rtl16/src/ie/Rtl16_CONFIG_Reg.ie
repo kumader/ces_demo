@@ -1,0 +1,24 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "CONFIG_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1004", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0000", no_logging => true },
+               "0Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "1Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "2Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "3Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "4LED_MODE" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "5VIDEO_DRIVE" 		 	                => { type => "uint2", init => 0, bitfield =>1  }
+             };

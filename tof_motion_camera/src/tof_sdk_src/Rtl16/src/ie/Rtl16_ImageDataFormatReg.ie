@@ -1,0 +1,55 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "ImageDataFormatReg";
+
+$enums = {
+
+         "ImageDataFormat_e" => { "DISTAMP" => 0 
+			     , "XYZ" => 3 
+			     , "XYZA" => 4 
+			     , "DISTXYZ" => 9
+			     , "OPTAXIS" => 10
+			     , "TESTMODE" => 11
+			     , "DIST" => 12 
+			     , "RAWDISTAMP" => 13
+			     , "DISTAMPBAL" => 23
+			     , "RAWPHASES" => 24
+				}
+         };
+
+
+
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x4", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "1Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "2Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "3ImageDataFormat" 		=> { type => "uint2", init=>0, bitfield =>8
+                                                   , set => "ImageDataFormat_e"
+                                                   , convert_to_string => { 0 => "0:distance and amplitude"
+                                                                          , 3 => "3:X/Y/Z coordinates"
+                                                                          , 4 => "4:X/Y/Z coordinates and amplitude"
+                                                                          , 9 => "9:distance and X/Y/Z coordinates"
+                                                                          , 10 => "10:optical axis coordinate and amplitude"
+                                                                          , 11 => "11:4 channels test mode"
+                                                                          , 12 => "12:distance"
+                                                                          , 13 => "13:raw distance and amplitude"
+                                                                          , 23 => "23:distance and amplitude and balance"
+                                                                          , 24 => "24:raw phases (1-8 channels)"
+                                                                          }
+                                                   , set_from_string => $enums->{"ImageDataFormat_e"}
+                                                   }
+             };
+

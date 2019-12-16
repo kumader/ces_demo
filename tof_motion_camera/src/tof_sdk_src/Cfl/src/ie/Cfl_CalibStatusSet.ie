@@ -1,0 +1,49 @@
+###########################################################################
+#     PROJECT: Cpp -- cfl
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the set specification
+###########################################################################
+
+
+$namespace = "Cfl";
+$name = "CalibStatusSet";
+$attributes = { 
+               "CalibErrorOccured"		   		=> { type => "bool", init => "false"},
+               "NoFPPNCalibrationDataInNVRAM"   	        => { type => "bool", init => "false"},
+               "NoLensCalibrationDataInNVRAM" 		        => { type => "bool", init => "false"},
+               "NoWigglingCalibrationInNVRAM"		        => { type => "bool", init => "false"},
+               "Status"                                         => { type => "uint2", init => 0, 
+                                                                   , check_serialize => [0,19,20,21,161,255,252,246,244],
+                                                                   , convert_to_string => { 0 => "0:Idle"
+                                                                                          , 19 => "19:FPPN calibration"
+                                                                                          , 20 => "20:Erasing flash"
+                                                                                          , 21 => "21:DistOffset calibration"
+                                                                                          , 161 => "161:Operation done"
+                                                                                          , 255 => "255:Generic error"
+                                                                                          , 252 => "252:Out of memory"
+                                                                                          , 246 => "246:Wrong image mode (Need distance)"
+                                                                                          , 244 => "23:RealWorldXCoordinate value zero or too large"
+                                                                                          }
+                                                                  }
+             };
+
+$enums = {
+               "Status_e" => { "IDLE" => 0
+                             , "FPPN" => 19
+                             , "ERASING_FLASH" => 20
+                             , "DISTOFFSET_CALIBRATION" => 21
+                             , "OPERATION_DONE" => 161
+                             , "GENERIC_ERROR" => 255
+                             , "OUT_OF_MEMORY" => 252
+                             , "WRONG_IMAGEMODE_NEED_DISTANCE" => 246
+                             , "REAL_WORLD_X_COORDINATE_VALUE_ZERO_OR_TOO_LARGE" => 244
+                                }
+         };
+
+
+

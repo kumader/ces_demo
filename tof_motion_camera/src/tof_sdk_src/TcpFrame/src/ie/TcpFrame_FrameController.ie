@@ -1,0 +1,23 @@
+###########################################################################
+#     PROJECT: Cpp -- TcpFrame
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Tcp FrameController specification
+###########################################################################
+
+
+$namespace = "TcpFrame";
+$name = "FrameController";
+$nameid = 4001;
+$attributes = { 
+               "SecondsTimeout"      => { type => "uint4", init => 0 },
+               "MicroSecondsTimeout" => { type => "uint4", init => 0 },
+               "PeerTcpPort"         => { type => "uint2", init => 93 },
+               "PeerTcpAddress"      => { type => "std::string", init => "std::string()" },
+               "TcpSocket"           => { type => "IO::Socket", init => "IO::Socket()" },
+               "TcpSelect"           => { type => "IO::SelectWithSockets", init => "IO::SelectWithSockets()" },
+             };

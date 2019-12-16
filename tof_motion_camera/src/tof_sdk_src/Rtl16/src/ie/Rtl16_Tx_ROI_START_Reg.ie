@@ -1,0 +1,26 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_ROI_START_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1020", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0000", no_logging => true },
+               "0Tx_ROI_START_X" 	  		       	=> { type => "uint2", init => 0, bitfield => 8 },
+               "8Tx_ROI_START_Y" 	  		       	=> { type => "uint2", init => 0, bitfield => 8 },
+              };
+$enums = {
+          Register_e => {
+			   T1_ROI_START => "0x1020"
+			 , T2_ROI_START => "0x10a2"
+			}
+         };

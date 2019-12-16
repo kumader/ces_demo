@@ -1,0 +1,20 @@
+###########################################################################
+#     PROJECT: Cpp -- TcpFrame
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Tcp FrameStatistics specification
+###########################################################################
+
+
+$namespace = "TcpFrame";
+$name = "FrameStatistics";
+$nameid = 4002;
+$attributes = { 
+               "T1"                 => { type => "Common::PreciseTimeValue", init => "Common::PreciseTimeValue()" },
+               "T2"                 => { type => "Common::PreciseTimeValue", init => "Common::PreciseTimeValue()" },
+               "NofBytes"            => { type => "sint8", init => 0 },
+             };

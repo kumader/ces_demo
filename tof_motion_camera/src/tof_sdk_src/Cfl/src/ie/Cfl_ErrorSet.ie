@@ -1,0 +1,27 @@
+###########################################################################
+#     PROJECT: Cpp -- cfl
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the set specification
+###########################################################################
+
+
+$namespace = "Cfl";
+$name = "ErrorSet";
+$attributes = { 
+               "ApplicationProcessorTooHot"		   	=> { type => "bool", init => "false"},
+               "SerdesError" 	     			   	=> { type => "bool", init => "false"},
+               "CaptureError" 		        		=> { type => "bool", init => "false" },
+               "CaptureTimeout"		        		=> { type => "bool", init => "false" },
+               "CalibrationDataMissing"         		=> { type => "bool", init => "false" },
+               "IlluminationTemperatureSensorError"     	=> { type => "bool", init => "false" },
+               "TofSensorTemperatureSensorError"     		=> { type => "bool", init => "false" },
+               "IlluminationError"     				=> { type => "bool", init => "false" },
+               "IlluminationOverTemperature" 			=> { type => "bool", init => "false" },
+               "TofCCTemperatureError"     			=> { type => "bool", init => "false" },
+               "TofCCPLLConfigurationError"    			=> { type => "bool", init => "false" },
+             };

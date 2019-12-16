@@ -1,0 +1,20 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "FactoryMacAddr0Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x37", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Byte0" 					=> { type => "uint2", init => 0, bitfield =>8, hex_logging => true  },
+               "8Byte1" 					=> { type => "uint2", init => 0, bitfield =>8, hex_logging => true  },
+             };

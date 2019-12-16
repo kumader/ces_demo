@@ -1,0 +1,38 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "MixhVoltageReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0xfc", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0MixhVoltage_V10" 			 	=> { type => "uint2", init => 0, bitfield =>16, set =>"Voltage_e"  }
+             };
+$enums = {
+
+         "Voltage_e" => { "VOLT_0_9" => 9
+				     , "VOLT_1_0" => 10
+				     , "VOLT_1_1" => 11
+				     , "VOLT_1_2" => 12
+				     , "VOLT_1_3" => 13
+				     , "VOLT_1_4" => 14
+				     , "VOLT_1_5" => 15
+				     , "VOLT_1_6" => 16
+				     , "VOLT_1_7" => 17
+				     , "VOLT_1_8" => 18
+				     , "VOLT_1_9" => 19
+				     , "VOLT_2_0" => 20 
+				     , "VOLT_2_1" => 21
+				     , "VOLT_2_2" => 22 
+				}
+         };
+

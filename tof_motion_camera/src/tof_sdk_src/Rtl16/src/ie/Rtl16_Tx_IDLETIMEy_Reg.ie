@@ -1,0 +1,27 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_IDLETIMEy_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1014", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0x0000, no_logging =>true },
+               "0IDLETIME_tmix" 	  		       	=> { type => "uint2", init => 0, bitfield => 16 }
+             };
+$enums = {
+          Register_e => {
+			   T1_IDLETIME0 => "0x1014"
+			 , T1_IDLETIME1 => "0x1016"
+			 , T2_IDLETIME0 => "0x1096"
+			 , T2_IDLETIME1 => "0x1098"
+                        }
+         }

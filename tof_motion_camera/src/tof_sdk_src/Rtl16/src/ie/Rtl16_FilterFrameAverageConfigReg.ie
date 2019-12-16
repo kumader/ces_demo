@@ -1,0 +1,19 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "FilterFrameAverageConfigReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x01e7", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x2", no_logging => true },
+               "0NumberOfFrames" 		                => { type => "uint2", init => 0, bitfield =>4 },
+             };

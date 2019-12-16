@@ -1,0 +1,18 @@
+###########################################################################
+#     PROJECT: Cpp -- CppClassCoder
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: an example of a cpp signal class definition file 
+###########################################################################
+
+$namespace = "Mat2D";
+$name = "MatIdx";
+$attributes = { 
+                   XRes            => { type => "uint2", init => 0  }
+                 , YRes            => { type => "uint2", init => 0  }
+                 , Ptr             => { type => "Mat2D::Uint2Ptr_t", init => 0 }
+             };

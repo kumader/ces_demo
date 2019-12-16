@@ -1,0 +1,50 @@
+###########################################################################
+#     PROJECT: Cpp -- UdpFrame
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Frame Data Interface Header V31 specification
+###########################################################################
+
+
+#NOTE: types need big endian encoding !
+
+$namespace = "UdpFrame";
+$name = "FrameDataInterfaceHeaderV31";
+$nameid = 2001;
+$attributes = { 
+               "0Reserved"           => { type => "uint2", init => 65535, check_serialize => true },
+               "2HeaderVersion"      => { type => "uint2", init => 3,     check_serialize => true },
+               "4ImageWidth"         => { type => "uint2", init => 91 },
+               "6ImageHeight"        => { type => "uint2", init => 92 },
+               "8NofChannels"        => { type => "uint1", init => 93 },
+               "9BytesPerPixel"      => { type => "uint1", init => 94 },
+               "10ImageFormat"       => { type => "uint2", init => 95 },                             # only bits 3:10 are valid
+               "12Timestamp"         => { type => "uint4", init => 96 },                             # in us
+               "16FrameCounter"      => { type => "uint2", init => 97 },                             # cyclic
+               "18PreMetaData"       => { type => "uint1", init => 98 },    
+               "19PostMetaData"      => { type => "uint1", init => 99 },
+               "20Reserved"          => { type => "uint4", init => 0, check_serialize => true },
+               "24Reserved"          => { type => "uint2", init => 0, check_serialize => true },
+               "26MainTemp"          => { type => "uint1", init => 91 },              
+               "27LedTemp"           => { type => "uint1", init => 92 },
+               "28FirmwareVersion"   => { type => "uint2", init => 93 },                             #FirmwareInfo
+               "30MagicV31"          => { type => "uint2", init => 13105, check_serialize => true },
+               "32IntegrationTime"   => { type => "uint2", init => 95 },                             # in us
+               "34ModulationFreq"    => { type => "uint2", init => 96 },                             # resolution 10kHz
+               "36Temp3"             => { type => "uint1", init => 97 },
+               "37ColorMode"         => { type => "uint1", init => 0, check_serialize => true }, #must be 0
+               "38ColorSensorWidth"  => { type => "uint2", init => 0, check_serialize => true }, #must be 0
+               "40ColorSensorHeight" => { type => "uint2", init => 0, check_serialize => true }, #must be 0
+               "42Reserved"          => { type => "uint4", init => 0, check_serialize => true },
+               "46Reserved"          => { type => "uint2", init => 0, check_serialize => true },
+               "48RawPhaseContent"   => { type => "uint4", init => 98 },
+               "52Reserved"          => { type => "uint2", init => 0, check_serialize => true },
+               "54Reserved"          => { type => "uint4", init => 0, check_serialize => true },
+               "58Reserved"          => { type => "uint4", init => 0, check_serialize => true },
+               "62Crc16"             => { type => "uint2", init => 99 }             #from offset 2 to 61
+                #64Data here begins the data
+             };

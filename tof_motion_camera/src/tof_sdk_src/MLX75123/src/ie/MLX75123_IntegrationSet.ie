@@ -1,0 +1,29 @@
+###########################################################################
+#     PROJECT: Cpp -- Api
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the get specification
+###########################################################################
+
+
+$namespace = "MLX75123";
+$name = "IntegrationSet";
+$attributes = { 
+               "FrameRate_Hz" 		        		=> { type => "float", init => "0.0"},
+               "Fin_MHz" 		        		=> { type => "uint2", init => 0},
+               "Fout_MHz" 		        		=> { type => "float", init => "0.0"},
+               "IntegrationTimePhase0_tmix" 	        	=> { type => "uint4", init => 0},
+               "IntegrationTimePhase1_tmix" 	        	=> { type => "uint4", init => 0},
+               "IntegrationTimePhase2_tmix" 	        	=> { type => "uint4", init => 0},
+               "IntegrationTimePhase3_tmix" 	        	=> { type => "uint4", init => 0},
+               "FrameIdleTime_tmix" 	        		=> { type => "uint4", init => 0},
+               "ReadoutTime_tmix" 	        		=> { type => "uint4", init => 0},
+               "Tmix_us"			        	=> { type => "float", init => "0.0"},
+               "IllPower_percent"			       	=> { type => "uint2", init => 0},
+               "MixhVoltage_V"		       			=> { type => "float", init => "0.0"},
+               "LaserPower_W"		       			=> { type => "float", init => "0.0"},
+             };

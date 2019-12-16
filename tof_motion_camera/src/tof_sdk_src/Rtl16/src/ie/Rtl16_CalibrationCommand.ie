@@ -1,0 +1,33 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "CalibrationCommandReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x0f", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0CmdCode" 					=> { type => "uint2", init => 0 , bitfield =>8
+                                                                   , set => "CmdCode_e"
+                                                                   , convert_to_string => { 13 => "0:FPPN on the current modulation frequency"
+                                                                                          , 16 => "19:Clear FPPN calibration data for current modulation frequency"
+                                                                                          , 19 => "20:Calibrate DistOffset of the current modulation frequency"
+                                                                                          }
+                                                   },
+             };
+$enums = {
+
+         "CmdCode_e" => { "SET_FPPN" => 13
+			, "CLEAR_FPPN" => 16
+			, "CALIBRATE_DISTOFFSET" => 19
+                        }
+         };
+

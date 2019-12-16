@@ -1,0 +1,19 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "HardwareConfigurationReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0xb", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x3f", no_logging => true },
+               "0LensOpeningAngleIdentifier" 			=> { type => "uint2", init => 0, bitfield =>16  },
+             };

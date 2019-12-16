@@ -1,0 +1,35 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "BLOCK_DISABLE_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x0ffe", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0000", no_logging => true },
+               "0DIS_BG" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "1DIS_PLL" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "2DIS_75023_BUFFERS"	 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "3DIS_VIDEO_BUFFERS" 	 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "4Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "5Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "6DIS_ADC_BG" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "7DIS_ADC_REF" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "8Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "9Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "10Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "11Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "12Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "13Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "14Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "15Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+             };
+

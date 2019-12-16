@@ -1,0 +1,40 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_Py_IDLE_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x102e", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Tx_Py_IDLE_tmix" 	  		       	=> { type => "uint2", init => 0, bitfield => 16 }
+              };
+$enums = {
+          Register_e => {
+			   T1_P0_IDLE => "0x102e"
+			 , T1_P1_IDLE => "0x103c"
+			 , T1_P2_IDLE => "0x104a"
+			 , T1_P3_IDLE => "0x1058"
+			 , T1_P4_IDLE => "0x1066"
+			 , T1_P5_IDLE => "0x1074"
+			 , T1_P6_IDLE => "0x1082"
+			 , T1_P7_IDLE => "0x1090"
+			 , T2_P0_IDLE => "0x10b0"
+			 , T2_P1_IDLE => "0x10be"
+			 , T2_P2_IDLE => "0x10cc"
+			 , T2_P3_IDLE => "0x10da"
+			 , T2_P4_IDLE => "0x10e8"
+			 , T2_P5_IDLE => "0x10f6"
+			 , T2_P6_IDLE => "0x1104"
+			 , T2_P7_IDLE => "0x1112"
+			}
+         };
+

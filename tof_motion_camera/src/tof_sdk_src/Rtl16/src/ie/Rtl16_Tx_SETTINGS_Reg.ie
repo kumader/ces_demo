@@ -1,0 +1,37 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_SETTINGS_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1012", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0C03", no_logging => true },
+               "0Tx_PHASE_COUNT" 	  		       	=> { type => "uint2", init => 0, bitfield => 3 },
+               "3Reserved"                                      => { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true  },
+               "4Tx_QUIET" 	  		       	        => { type => "uint2", init => 0, bitfield => 2 },
+               "6Tx_FLIP_MIRROR" 	  		        => { type => "uint2", init => 0, bitfield => 2 },
+               "8Reserved"                                      => { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true  },
+               "9Reserved"                                      => { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true  },
+               "10Tx_EN_META1" 	  		                => { type => "uint2", init => 0, bitfield => 1 },
+               "11Tx_EN_META2" 	  		                => { type => "uint2", init => 0, bitfield => 1 },
+               "12Reserved"                                     => { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true  },
+               "13Tx_EN_TEST_ROW" 	  	                => { type => "uint2", init => 0, bitfield => 1 },
+               "14Tx_EN_TEST_ADC" 	  	                => { type => "uint2", init => 0, bitfield => 1 },
+               "15Reserved"                                     => { type => "uint2", init => 0, bitfield => 1, no_logging => true, no_getset =>true  }
+              };
+$enums = {
+          Register_e => {
+			   T1_SETTINGS => "0x1012"
+			 , T2_SETTINGS => "0x1094"
+			}
+         };
+

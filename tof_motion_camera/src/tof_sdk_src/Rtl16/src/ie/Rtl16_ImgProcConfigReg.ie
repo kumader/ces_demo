@@ -1,0 +1,32 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "ImgProcConfigReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x1e0", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x28c0", no_logging => true },
+               "0EnableMedianFilter"				=> { type => "uint2", init => 0, bitfield =>1  },
+               "1Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true },
+               "2Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true },
+               "3EnableBilateralFilter"				=> { type => "uint2", init => 0, bitfield =>1  },
+               "4EnableSlidingAverage"				=> { type => "uint2", init => 0, bitfield =>1  },
+               "5Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true },
+               "6EnableWigglingCompensation"			=> { type => "uint2", init => 0, bitfield =>1  },
+               "7EnableFPPNCompensation"			=> { type => "uint2", init => 0, bitfield =>1  },
+               "8Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true },
+               "9Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true },
+               "10EnableFrameAverageFilter"			=> { type => "uint2", init => 0, bitfield =>1  },
+               "11EnableTemperatureCompensation"		=> { type => "uint2", init => 0, bitfield =>1  },
+               "12Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true },
+               "13EnableOffsetViaDistOffset0"			=> { type => "uint2", init => 0, bitfield =>1  }
+             };

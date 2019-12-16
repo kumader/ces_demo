@@ -1,0 +1,22 @@
+###########################################################################
+#     PROJECT: Cpp -- CppClassCoder
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2303 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: an example of a cpp class definition file 
+###########################################################################
+
+$namespace = "Common";
+$name = "LogFormat";
+$attributes = { 
+                Mode           => { type => "uint2", init => 91 }
+               ,CurrentDepth   => { type => "uint2", init => 92 }
+               ,Indent         => { type => "uint2", init => 93 }
+               ,BeginFieldSeparator  => { type => "string", init => "\"\"" }
+               ,MiddleFieldSeparator  => { type => "string", init =>  "\"\"" }
+               ,MaxDepth   => { type => "uint2", init => 94 }
+               ,IndentSpaces   => { type => "uint2", init => 95 }
+              };

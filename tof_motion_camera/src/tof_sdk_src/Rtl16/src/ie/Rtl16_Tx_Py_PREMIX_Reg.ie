@@ -1,0 +1,40 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_Py_PREMIX_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x102c", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Tx_Py_PREMIX_tmix" 	  		       	=> { type => "uint2", init => 0, bitfield => 16 }
+              };
+$enums = {
+          Register_e => {
+			   T1_P0_PREMIX => "0x102c"
+			 , T1_P1_PREMIX => "0x103a"
+			 , T1_P2_PREMIX => "0x1042"
+			 , T1_P3_PREMIX => "0x1052"
+			 , T1_P4_PREMIX => "0x1064"
+			 , T1_P5_PREMIX => "0x1072"
+			 , T1_P6_PREMIX => "0x1080"
+			 , T1_P7_PREMIX => "0x108e"
+			 , T2_P0_PREMIX => "0x10ae"
+			 , T2_P1_PREMIX => "0x10bc"
+			 , T2_P2_PREMIX => "0x10ca"
+			 , T2_P3_PREMIX => "0x10d8"
+			 , T2_P4_PREMIX => "0x10e6"
+			 , T2_P5_PREMIX => "0x10f4"
+			 , T2_P6_PREMIX => "0x1102"
+			 , T2_P7_PREMIX => "0x1110"
+			}
+         };
+

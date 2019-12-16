@@ -1,0 +1,16 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the tof camera controller specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "RegController";
+$attributes = { 
+              };

@@ -1,0 +1,30 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "IOState0Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0xd0", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "1Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "2Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "3Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "4Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "5Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "6Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "7Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "8Reserved"					=> { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset => true  },
+               "9GPO0" 					        => { type => "uint2", init => 0, bitfield =>1  },
+               "10GPO1" 				        => { type => "uint2", init => 0, bitfield =>1  },
+               "11GPO2" 				        => { type => "uint2", init => 0, bitfield =>1  },
+             };

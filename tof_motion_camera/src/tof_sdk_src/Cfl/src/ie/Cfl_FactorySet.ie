@@ -1,0 +1,23 @@
+###########################################################################
+#     PROJECT: Cpp -- Cfl
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the set specification
+###########################################################################
+
+
+$namespace = "Cfl";
+$name = "FactorySet";
+$attributes = { 
+               "SerialNumber" 	        			=> { type => "uint4", init => "0"},
+               "FirmwareLoadCounter" 		        	=> { type => "uint2", init => "0"},
+               "FirmwareRevisionInfo" 		        	=> { type => "std::string", init => "std::string(\"0.0.0\")"},
+               "FirmwareBuildInfo" 		        	=> { type => "std::string", init => "std::string(\"2017-01-01-00:00:00\")"},
+               "FactoryBuildInfo" 		        	=> { type => "std::string", init => "std::string(\"2017-01-01-00:00(00)\")"},
+               "FactoryMacAddress" 		        	=> { type => "std::string", init => "std::string(\"00:00:00:00:00:00\")"},
+               "HardwareSpecificIdentification"	 	        => { type => "uint2", init => "0x0", hex_logging => true},
+             };

@@ -1,0 +1,57 @@
+###########################################################################
+#     PROJECT: Cpp -- cfl
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the set specification
+###########################################################################
+
+
+$namespace = "Cfl";
+$name = "ConfigurationSet";
+$attributes = { 
+               "ImageDataFormat"         			=> { type => "uint2"
+                                                                   , init => "0"
+                                                                   , convert_to_string => { 0 => "0:distance and amplitude"
+                                                                                          , 3 => "3:X/Y/Z coordinates"
+                                                                                          , 4 => "4:X/Y/Z coordinates and amplitude"
+                                                                                          , 9 => "9:distance and X/Y/Z coordinates"
+                                                                                          , 10 => "10:optical axis coordinate and amplitude"
+                                                                                          , 11 => "11:4 channels test mode"
+                                                                                          , 12 => "12:distance"
+                                                                                          , 13 => "13:raw distance and amplitude"
+                                                                                          , 23 => "23:distance and amplitude and balance"
+                                                                                          , 24 => "24:raw phases (1-8 channels)"
+                                                                                          }
+                                                                   },               
+               "LensOpeningAngleIdentifier" 	        	=> { type => "uint2", init => "60"},
+               "IsInManualTrigger" 		        	=> { type => "bool", init => "false" },
+               "EnableDHCPFlag" 		        	=> { type => "bool", init => "false" },
+               "EnableUdpStreamingFlag" 	        	=> { type => "bool", init => "true" },
+               "IgnoreCrcForUdpStreamingFlag"	        	=> { type => "bool", init => "true" },
+               "IpAddress" 		        		=> { type => "std::string", init => "std::string(\"192.168.0.10\")" },
+               "Netmask" 		        		=> { type => "std::string", init => "std::string(\"255.255.255.0\")" },
+               "Gateway" 		        		=> { type => "std::string", init => "std::string(\"192.168.0.1\")" },
+               "TcpCtrlPort" 		        		=> { type => "uint2", init => "10001" },
+               "UdpStreamAddress" 		       		=> { type => "std::string", init => "std::string(\"224.0.0.1\")" },
+               "UdpStreamPort" 		       			=> { type => "uint2", init => "10002" },
+             };
+
+$enums = {
+
+         "ImageDataFormat_e" => { "DISTAMP" => 0
+                                , "XYZ" => 3
+                                , "XYZA" => 4
+                                , "DISTXYZ" => 9
+                                , "OPTAXIS" => 10
+                                , "TESTMODE" => 11
+                                , "DIST" => 12
+                                , "RAWDISTAMP" => 13
+                                , "DISTAMPBAL" => 23
+                                , "RAWPHASES" => 24
+                                }
+         };
+

@@ -1,0 +1,21 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Eth0ConfigReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x240", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0006", no_logging => true },
+               "0EnableDHCP"    			        => { type => "uint2", init => 0, bitfield =>1  },
+               "1EnableUdpStreaming" 			        => { type => "uint2", init => 0, bitfield =>1  },
+               "2IgnoreCrcForUdpStreaming" 		        => { type => "uint2", init => 0, bitfield =>1  },
+             };

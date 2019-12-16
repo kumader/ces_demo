@@ -1,0 +1,29 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "IllPowerReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x159", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0IllPower_percent"	 		 	=> { type => "uint2", init => 0, set => "Percent_e", bitfield =>16  },
+             };
+$enums = {
+
+         "Percent_e" => { "OFF" => 0
+		     , "LOW" => 25
+		     , "MID" => 50
+		     , "HIGH" => 75
+		     , "MAX" => 100
+			}
+         };
+

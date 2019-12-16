@@ -1,0 +1,45 @@
+###########################################################################
+#     PROJECT: Cpp -- TcpFrame
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Tcp Control Interface Header V3 specification
+###########################################################################
+
+
+#NOTE: types need big endian encoding
+
+$namespace = "TcpFrame";
+$name = "TcpControlInterfaceHeaderV3_Alive";
+$nameid = 10005;
+$attributes = { 
+               "0Preamble"         => { type => "uint2", init => 41452,    check_serialize => true, no_getset => true  },
+               "2ProtocolVersion"  => { type => "uint1", init => 3, check_serialize => true, no_getset => true  },
+               "3Command"          => { type => "uint1", init => "0xfe", check_serialize => true, no_getset => true  },
+               "4SubCommand"       => { type => "uint1", init => 0, check_serialize => true, no_getset => true  },
+               "5Status"           => { type => "uint1", init => 0, check_serialize => true, no_getset => true  },     
+               "6Flags"            => { type => "uint2", init => 1, check_serialize => true },   #set to 1 to ignore Crc32
+               "8Length"           => { type => "uint4", init => 0, check_serialize => true, no_getset => true    },   
+               "12HeaderData0"     => { type => "uint1", init => 0, check_serialize => true, no_getset => true   },  
+               "13HeaderData1"     => { type => "uint1", init => 0, check_serialize => true, no_getset => true   }, 
+               "14HeaderData2"     => { type => "uint1",  init => 0,    check_serialize => true, no_getset => true  },
+               "15HeaderData3"     => { type => "uint1",  init => 0,    check_serialize => true, no_getset => true  },
+               "16CallbackIpVersion"        => { type => "uint1",  init => 0, check_serialize => [0,4]  , no_getset => true  },   #IPV4         #ignore 
+               "17Reserved"        => { type => "uint1",  init => 0,    check_serialize => true, no_getset => true  },
+               "18Reserved"        => { type => "uint2",  init => 0,    check_serialize => true, no_getset => true  },
+               "20Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "24Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "28Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "32Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "36Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "40Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "44Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "48Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "52Reserved"        => { type => "uint4",  init => 0,    check_serialize => true, no_getset => true  },
+               "56Reserved"        => { type => "uint2",  init => 0,    check_serialize => true, no_getset => true  },
+               "58DataCrc32"       => { type => "uint4",  init => 0,    check_serialize => true },
+               "62HeaderCrc16"     => { type => "uint2",  init => 93     } #checkum over 60 bytes: 2 to 61
+             };

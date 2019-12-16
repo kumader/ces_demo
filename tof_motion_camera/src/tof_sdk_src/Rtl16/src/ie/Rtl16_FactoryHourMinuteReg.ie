@@ -1,0 +1,20 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "FactoryHourMinuteReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x3a", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 0, no_logging => true },
+               "0ProductionHour" 				=> { type => "uint2", init => 0, bitfield =>8  },
+               "8ProductionMinute" 				=> { type => "uint2", init => 0, bitfield =>8  },
+             };

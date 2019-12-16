@@ -1,0 +1,17 @@
+###########################################################################
+#     PROJECT: Cpp -- CppClassCoder
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2303 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: an example of a cpp class definition file 
+###########################################################################
+
+$namespace = "Common";
+$name = "PreciseTimeValue";
+$attributes = { 
+                TimeSec  => { type => "sint4", init => 91 }
+               ,TimeUs   => { type => "sint4", init => 92 }
+              };

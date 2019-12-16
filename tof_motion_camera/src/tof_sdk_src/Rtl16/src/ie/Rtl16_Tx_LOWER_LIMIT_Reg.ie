@@ -1,0 +1,25 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "Tx_LOWER_LIMIT_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x101e", hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0333", no_logging => true },
+               "0Tx_LOWER_LIMIT" 	  		       	=> { type => "uint2", init => 0, bitfield => 16 }
+              };
+$enums = {
+          Register_e => {
+			   T1_LOWER_LIMIT => "0x101e"
+			 , T2_LOWER_LIMIT => "0x10a0"
+			}
+         };

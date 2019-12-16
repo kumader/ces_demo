@@ -1,0 +1,30 @@
+###########################################################################
+#     PROJECT: Cpp -- UdpFrame
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the Udp Data Interface Header V1 specification
+###########################################################################
+
+
+#NOTE: types need big endian encoding
+
+$namespace = "UdpFrame";
+$name = "UdpDataInterfaceHeaderV1";
+$nameid = 1001;
+$attributes = { 
+               "0Version"           => { type => "uint2", init => 1,    check_serialize => true },
+               "2FrameCounter"      => { type => "uint2", init => 91 },
+               "4PacketCounter"     => { type => "uint2", init => 92 },
+               "6DataLength"        => { type => "uint2", init => 93 },
+               "8FrameSize"         => { type => "uint4", init => 94 },
+               "12PacketCrc32"      => { type => "uint4", init => 0,    check_serialize => true },
+               "16Flags"            => { type => "uint4", init => 1,    check_serialize => true },
+               "20Reserved"        => { type => "uint4",  init => 0,    check_serialize => true },
+               "24Reserved"        => { type => "uint4",  init => 0,    check_serialize => true },
+               "28Reserved"        => { type => "uint4",  init => 0,    check_serialize => true }
+               #32Data here begins the data
+             };

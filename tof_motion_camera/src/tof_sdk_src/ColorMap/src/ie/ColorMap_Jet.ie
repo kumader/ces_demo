@@ -1,0 +1,18 @@
+###########################################################################
+#     PROJECT: Cpp -- ColorMap
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the ColorMap Jet specification
+###########################################################################
+
+
+$namespace = "ColorMap";
+$name = "Jet";
+$attributes = { 
+               "Vector"              => { type => "Jet::Vector_t", init =>"Jet::Vector_t()", no_getset=>true },
+               "Idx"                 => { type => "Jet::Idx_t", init => "Jet::Idx_t()", no_getset=>true },
+              };

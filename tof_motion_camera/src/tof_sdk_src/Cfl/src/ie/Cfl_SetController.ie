@@ -1,0 +1,16 @@
+###########################################################################
+#     PROJECT: Cpp -- Cfl
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the set controller specification
+###########################################################################
+
+
+$namespace = "Cfl";
+$name = "SetController";
+$attributes = { 
+              };

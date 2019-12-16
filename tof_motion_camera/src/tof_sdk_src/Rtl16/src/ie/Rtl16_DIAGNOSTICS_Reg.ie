@@ -1,0 +1,35 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "DIAGNOSTICS_Reg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0x0ffd", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => "0x0005", no_logging => true },
+               "0PLL_LOCK" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "1Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "23V3_READY" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "3Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "4Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "5Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "6Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "7Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "8Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "9Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "10Reserved"                                      => { type => "uint2", init => 0, bitfield =>1, no_logging => true, no_getset =>true  },
+               "11DED_LATCH" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "12SEC_LATCH" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "13DED_ERROR" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "14SEC_ERROR" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+               "15ROI_ERROR" 		 	                => { type => "uint2", init => 0, bitfield =>1  },
+             };
+

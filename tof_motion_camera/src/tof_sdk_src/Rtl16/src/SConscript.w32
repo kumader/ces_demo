@@ -1,0 +1,229 @@
+#robert on Son Okt  7 21:49:12 CEST 2007
+#scons script to create a library and regression tests
+
+Import('variant_dir') #from exports in SConstruct
+Import('src_dir') #from exports in SConstruct
+
+
+#COMMAND LINE OPTIONS
+opts = Variables('custom.py')
+opts.Add('DEBUG', 'Set to 1 to build for debugging', 1)
+opts.Add('PROFILE', 'Set to 1 to build for profiling', 0)
+opts.Add('OPTIMIZE_SIZE', 'Set to 1 to optimize for size', 0)
+opts.Add('OPTIMIZE_SPEED', 'Set to 1 to optimize for speed', 0)
+opts.Add('TEST_COVERAGE', 'Set to 1 to build for test coverage', 0)
+opts.Add('LOG_LEVEL', 'Set to DEBUG, INFO, WARNING, ERROR', "INFO")
+
+#PACKAGE NAME
+import os
+package_path = os.path.abspath('..')
+package_name = os.path.basename(package_path)
+
+#INCLUDE OTHER PKGS
+packages_root = '../../'
+
+inc_packages   = ['General_inc', 'Common_inc', 'Logger_inc', 'SocketIO_inc', 'TcpFrame_inc', 'Rtl16_inc']
+lib_packages = [
+                 package_name
+               , 'TcpFrame'
+               , 'SocketIO'
+               , 'Logger'
+               , 'Common' 
+               , 'ws2_32'    #this library needs to be here after the object code, see http://mingw.5.n7.nabble.com/socket-and-version-can-t-be-linked-td13374.html          
+               ]
+
+include = list()
+for item in inc_packages:
+ object = Dir(packages_root + item +'/' + src_dir)
+ include.append(object)
+
+#LIBS
+libs = list()
+for item in lib_packages:
+ object = Dir(packages_root + item +'/'+ variant_dir)    #REQUIRE libs in variant_dir
+ libs.append(object)
+
+#DEFINE ENVIRONMENT
+env = Environment(options=opts
+                 ,CXX = 'i686-w64-mingw32-g++'
+                 ,AR = 'i686-w64-mingw32-ar'
+                 ,RANLIB = 'i686-w64-mingw32-ranlib'
+                 ,CPPFLAGS = '-Wall '      #removed -O2 for debugging support
+                 ,LINKFLAGS = ''
+                 ,CPPDEFINES='_TARGET_ARCH_W32_'
+                 ,CPPPATH=include
+                 ,LIBPATH=libs
+                 ,ENV={'PATH' : os.environ['PATH']}
+)
+Help(opts.GenerateHelpText(env))
+
+#LOGGING 
+import logging
+loglevel = {"DEBUG":logging.DEBUG, "INFO":logging.INFO, "WARNING":logging.WARNING, "ERROR":logging.ERROR}[env["LOG_LEVEL"]]
+logger   = logging.getLogger(package_name)
+logger.setLevel(loglevel)
+channel  = logging.StreamHandler()
+channel.setLevel(loglevel)
+channel.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+logger.addHandler(channel)
+
+logger.info("working in package %s" %package_name) 
+logger.info("depends on: %s, %s" %(inc_packages, lib_packages)) 
+
+
+# GPROF: need to compile and link with -pg option
+if int(env['PROFILE']) == 1:
+ logger.info("compiling with GPROF support") 
+ env.Append(LINKFLAGS= ' -pg ')
+ env.Append(CPPFLAGS=' -pg ')
+
+# DEBUG need to compile with -g option
+if int(env['DEBUG']) == 1:
+ logger.info("compiling with DEBUG support") 
+ env.Append(CPPFLAGS=' -g ')
+
+# SIZE OPTIMIZATION need to compile with -Os option
+if int(env['OPTIMIZE_SIZE']) == 1:
+ logger.info("compiling with size optimization") 
+ env.Append(CPPFLAGS=' -Os ')
+
+# SPEED OPTIMIZATION need to compile with -O3 option
+if int(env['OPTIMIZE_SPEED']) == 1:
+ logger.info("compiling with speed optimization") 
+ env.Append(CPPFLAGS=' -O3 ')
+
+# TEST COVERAGE need to compile without optimization
+if int(env['TEST_COVERAGE']) == 1:
+ logger.info("compiling with test coverage") 
+ env.Append(CPPFLAGS=' -fprofile-arcs -ftest-coverage ')
+
+
+#SOURCE FILES EXCEPT TESTS
+#FIXME: BuildDir changes path to buildpath
+files = os.listdir('../' + src_dir)
+
+sources = list()
+for name in files:
+ if name.find('test') >= 0: continue
+ if name.find('Test') >= 0: continue
+ if name.find('.cpp') >= 0:               #REQUIRE cpp code
+   sources.append(name)
+
+logger.debug("found sources: %s" %sources) 
+
+#MAKE LIBRARY
+targetname = 'lib' + package_name 
+if len(sources): env.Library(target=targetname,source=sources)
+
+
+#MAKE REGRESSIONTEST
+env.Program(target="RegressionTest_Rtl16_RegController.exe",source="RegressionTest_Rtl16_RegController.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ADC_DELAY_FT_Reg.exe",source="RegressionTest_Rtl16_ADC_DELAY_FT_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_IDLETIMEy_Reg.exe",source="RegressionTest_Rtl16_Tx_IDLETIMEy_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_MODE_Reg.exe",source="RegressionTest_Rtl16_Tx_MODE_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_Py_INTz_Reg.exe",source="RegressionTest_Rtl16_Tx_Py_INTz_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_BaseBoardTempReg.exe",source="RegressionTest_Rtl16_BaseBoardTempReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CalibstatusReg.exe",source="RegressionTest_Rtl16_CalibStatusReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_DistOffset0Reg.exe",source="RegressionTest_Rtl16_DistOffset0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0UdpStreamIp0Reg.exe",source="RegressionTest_Rtl16_Eth0UdpStreamIp0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0UdpStreamIp1Reg.exe",source="RegressionTest_Rtl16_Eth0UdpStreamIp1Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FilterFrameAverageConfigReg.exe",source="RegressionTest_Rtl16_FilterFrameAverageConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FilterSlafConfigReg.exe",source="RegressionTest_Rtl16_FilterSlafConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FirmwareInfoReg.exe",source="RegressionTest_Rtl16_FirmwareInfoReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_HardwareConfigurationReg.exe",source="RegressionTest_Rtl16_HardwareConfigurationReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ImageDataFormatReg.exe",source="RegressionTest_Rtl16_ImageDataFormatReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ImgProcConfig2Reg.exe",source="RegressionTest_Rtl16_ImgProcConfig2Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ImgProcConfigReg.exe",source="RegressionTest_Rtl16_ImgProcConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_LedBoardTempReg.exe",source="RegressionTest_Rtl16_LedBoardTempReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_MainBoardTempReg.exe",source="RegressionTest_Rtl16_MainBoardTempReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ProcessorStatusReg.exe",source="RegressionTest_Rtl16_ProcessorStatusReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_SerialNumberHighWordReg.exe",source="RegressionTest_Rtl16_SerialNumberHighWordReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_SerialNumberLowWordReg.exe",source="RegressionTest_Rtl16_SerialNumberLowWordReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_StatusReg.exe",source="RegressionTest_Rtl16_StatusReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_BootStatusReg.exe",source="RegressionTest_Rtl16_BootStatusReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_BuildDayHourReg.exe",source="RegressionTest_Rtl16_BuildDayHourReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_BuildMinuteSecondReg.exe",source="RegressionTest_Rtl16_BuildMinuteSecondReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_BuildYearMonthReg.exe",source="RegressionTest_Rtl16_BuildYearMonthReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CalibStatus2Reg.exe",source="RegressionTest_Rtl16_CalibStatus2Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CalibrationCommandReg.exe",source="RegressionTest_Rtl16_CalibrationCommandReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CmdEnablePasswdReg.exe",source="RegressionTest_Rtl16_CmdEnablePasswdReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CmdExecReg.exe",source="RegressionTest_Rtl16_CmdExecReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CmdExecResultReg.exe",source="RegressionTest_Rtl16_CmdExecResultReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ConfidenceHighReg.exe",source="RegressionTest_Rtl16_ConfidenceHighReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ConfidenceThresHighReg.exe",source="RegressionTest_Rtl16_ConfidenceThresHighReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_ConfidenceThresLowReg.exe",source="RegressionTest_Rtl16_ConfidenceThresLowReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_DeviceTypeReg.exe",source="RegressionTest_Rtl16_DeviceTypeReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0ConfigReg.exe",source="RegressionTest_Rtl16_Eth0ConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0Gateway0Reg.exe",source="RegressionTest_Rtl16_Eth0Gateway0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0Gateway1Reg.exe",source="RegressionTest_Rtl16_Eth0Gateway1Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0Ip0Reg.exe",source="RegressionTest_Rtl16_Eth0Ip0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0Ip1Reg.exe",source="RegressionTest_Rtl16_Eth0Ip1Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0Snm0Reg.exe",source="RegressionTest_Rtl16_Eth0Snm0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0Snm1Reg.exe",source="RegressionTest_Rtl16_Eth0Snm1Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0TcpCtrlPortReg.exe",source="RegressionTest_Rtl16_Eth0TcpCtrlPortReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Eth0UdpStreamPortReg.exe",source="RegressionTest_Rtl16_Eth0UdpStreamPortReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryTimezoneReg.exe",source="RegressionTest_Rtl16_FactoryTimezoneReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryHourMinuteReg.exe",source="RegressionTest_Rtl16_FactoryHourMinuteReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryMacAddr0Reg.exe",source="RegressionTest_Rtl16_FactoryMacAddr0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryMacAddr1Reg.exe",source="RegressionTest_Rtl16_FactoryMacAddr1Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryMacAddr2Reg.exe",source="RegressionTest_Rtl16_FactoryMacAddr2Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryMonthDayReg.exe",source="RegressionTest_Rtl16_FactoryMonthDayReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FactoryYearReg.exe",source="RegressionTest_Rtl16_FactoryYearReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FileUpdateStatusReg.exe",source="RegressionTest_Rtl16_FileUpdateStatusReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FilterBilateralConfig2Reg.exe",source="RegressionTest_Rtl16_FilterBilateralConfig2Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FilterBilateralConfigReg.exe",source="RegressionTest_Rtl16_FilterBilateralConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FilterMedianConfigReg.exe",source="RegressionTest_Rtl16_FilterMedianConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_FrameCounterReg.exe",source="RegressionTest_Rtl16_FrameCounterReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_HorizontalFovReg.exe",source="RegressionTest_Rtl16_HorizontalFovReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_IllPowerReg.exe",source="RegressionTest_Rtl16_IllPowerReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_IOState0Reg.exe",source="RegressionTest_Rtl16_IOState0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_LatencyReg.exe",source="RegressionTest_Rtl16_LatencyReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_MixhVoltageReg.exe",source="RegressionTest_Rtl16_MixhVoltageReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Mode0Reg.exe",source="RegressionTest_Rtl16_Mode0Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_RealWorldXcoordinateReg.exe",source="RegressionTest_Rtl16_RealWorldXcoordinateReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Status2Reg.exe",source="RegressionTest_Rtl16_Status2Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradient2BaseboardReg.exe",source="RegressionTest_Rtl16_TempCompGradient2BaseboardReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradient2LimReg.exe",source="RegressionTest_Rtl16_TempCompGradient2LimReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradient2TimReg.exe",source="RegressionTest_Rtl16_TempCompGradient2TimReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradient3BaseboardReg.exe",source="RegressionTest_Rtl16_TempCompGradient3BaseboardReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradient3LimReg.exe",source="RegressionTest_Rtl16_TempCompGradient3LimReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradient3TimReg.exe",source="RegressionTest_Rtl16_TempCompGradient3TimReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradientBaseboardReg.exe",source="RegressionTest_Rtl16_TempCompGradientBaseboardReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradientLimReg.exe",source="RegressionTest_Rtl16_TempCompGradientLimReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TempCompGradientTimReg.exe",source="RegressionTest_Rtl16_TempCompGradientTimReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TstConfigReg.exe",source="RegressionTest_Rtl16_TstConfigReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TimClockCurrentReg.exe",source="RegressionTest_Rtl16_TimClockCurrentReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TimClockReg.exe",source="RegressionTest_Rtl16_TimClockReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_TriggerDelayReg.exe",source="RegressionTest_Rtl16_TriggerDelayReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_UpTimeHighReg.exe",source="RegressionTest_Rtl16_UpTimeHighReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_UpTimeLowReg.exe",source="RegressionTest_Rtl16_UpTimeLowReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_VerticalFovReg.exe",source="RegressionTest_Rtl16_VerticalFovReg.cpp",LIBS=lib_packages)
+
+env.Program(target="RegressionTest_Rtl16_Tx_SETTINGS_Reg.exe",source="RegressionTest_Rtl16_Tx_SETTINGS_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_FRAMECOUNT_Reg.exe",source="RegressionTest_Rtl16_Tx_FRAMECOUNT_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_Py_PREHEAT_Reg.exe",source="RegressionTest_Rtl16_Tx_Py_PREHEAT_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_Py_SETUP_Reg.exe",source="RegressionTest_Rtl16_Tx_Py_SETUP_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_ROI_SIZE_Reg.exe",source="RegressionTest_Rtl16_Tx_ROI_SIZE_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_ROI_START_Reg.exe",source="RegressionTest_Rtl16_Tx_ROI_START_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_USERn_Reg.exe",source="RegressionTest_Rtl16_USERn_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_RgbLedReg.exe",source="RegressionTest_Rtl16_RgbLedReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_SupervisorAliveReg.exe",source="RegressionTest_Rtl16_SupervisorAliveReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_SupervisorStatusReg.exe",source="RegressionTest_Rtl16_SupervisorStatusReg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_AutoModeReg.exe",source="RegressionTest_Rtl16_AutoModeReg.cpp",LIBS=lib_packages)
+
+env.Program(target="RegressionTest_Rtl16_BLOCK_DISABLE_Reg.exe",source="RegressionTest_Rtl16_BLOCK_DISABLE_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Bx_LATCH_Reg.exe",source="RegressionTest_Rtl16_Bx_LATCH_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Bx_ROW_IDLE_Reg.exe",source="RegressionTest_Rtl16_Bx_ROW_IDLE_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_CONFIG_Reg.exe",source="RegressionTest_Rtl16_CONFIG_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_DELAY_CONFIG_Reg.exe",source="RegressionTest_Rtl16_DELAY_CONFIG_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_DIAGNOSTICS_Reg.exe",source="RegressionTest_Rtl16_DIAGNOSTICS_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_I2C_ADDRESS_Reg.exe",source="RegressionTest_Rtl16_I2C_ADDRESS_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_PIXEL1_Reg.exe",source="RegressionTest_Rtl16_PIXEL1_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_PIXEL2_Reg.exe",source="RegressionTest_Rtl16_PIXEL2_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_START_DELAY_Reg.exe",source="RegressionTest_Rtl16_START_DELAY_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_LOWER_LIMIT_Reg.exe",source="RegressionTest_Rtl16_Tx_LOWER_LIMIT_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_Py_IDLE_Reg.exe",source="RegressionTest_Rtl16_Tx_Py_IDLE_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_Py_PREMIX_Reg.exe",source="RegressionTest_Rtl16_Tx_Py_PREMIX_Reg.cpp",LIBS=lib_packages)
+env.Program(target="RegressionTest_Rtl16_Tx_UPPER_LIMIT_Reg.exe",source="RegressionTest_Rtl16_Tx_UPPER_LIMIT_Reg.cpp",LIBS=lib_packages)
+
+logger.debug("finished in package %s" %package_name) 

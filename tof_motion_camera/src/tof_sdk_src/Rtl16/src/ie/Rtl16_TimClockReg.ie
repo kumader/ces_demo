@@ -1,0 +1,30 @@
+###########################################################################
+#     PROJECT: Cpp -- Rtl16
+#   COPYRIGHT: R. Hranitzky
+#    $RCSfile$
+#   $Revision: 2596 $
+#      AUTHOR: R. Hranitzky
+#  SUBSTITUTE:
+#    LANGUAGE: Perl
+# DESCRIPTION: the register specification
+###########################################################################
+
+
+$namespace = "Rtl16";
+$name = "TimClockReg";
+$attributes = { 
+               "0Addr"   		  		      	=> { type => "uint2", init => "0xfb", check_serialize => true, hex_logging => true },
+               "0Reg" 		  		        	=> { type => "uint2", init => 4800, no_logging => true },
+               "0TofCCInputClock_10kHz" 		 	=> { type => "uint2", init => 0, set => "Clock_e", bitfield =>16  },
+             };
+$enums = {
+
+          Register_e => {
+			 TIMCLOCK => "0xfb"
+			},
+          Clock_e  => { MIN     => 4000
+		      , DEFAULT => 4800
+		      , MAX     => 8000
+		      }
+         };
+
