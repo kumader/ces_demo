@@ -66,7 +66,7 @@ private:
     * @param i_lidarData stores scan data to be sent
     * @return ADTF error code
     */
-    tResult SendImage();
+    tResult SendOutputs();
 
     /**
     * Changes physical camera's settings based upon filter settings. Note that changing image
@@ -76,23 +76,45 @@ private:
     * @param i_timeoutUsec timeout setting for Cfl::SetController instance
     * @return ADTF error code
     */
-    tResult ChangeCameraSettings(Common::UseLogger::LogLevel_e i_logLevel, tUInt32 i_timeoutUsec);
+    tResult UpdateCameraSettings(Common::UseLogger::LogLevel_e i_logLevel, tUInt32 i_timeoutUsec);
+    tResult PopulatePointCloudFromDistanceMap();
+    
+    void LogInfo(cString infoString);
+    void LogError(cString errorString);
     //void ConvertDistanceImage(sScanData* outScanData);
     //static std::vector<tUInt8> convertScalarRasterToRedGreenRaster(tUInt8* input, tUInt64 size);
     //static void interpolateScalarToRedGreen(tUInt16 scalar, tUInt8& outRed, tUInt8& outGreen);
+    static void ApplyGain(tUInt8* data, tUInt8 gain, tUInt64 size);
+
 
     static const cString PROPERTY_UDP_TIMEOUT_USEC;
     static const cString PROPERTY_UDP_LISTENING_PORT;
+    static const cString PROPERTY_CAMERA_MOUNT_POS_X;
+    static const cString PROPERTY_CAMERA_MOUNT_POS_Y;
+    static const cString PROPERTY_CAMERA_MOUNT_POS_Z;
+    static const cString PROPERTY_CAMERA_MOUNT_PITCH;
+    static const cString PROPERTY_CAMERA_MOUNT_YAW;
+    static const cString PROPERTY_CAMERA_MOUNT_ROLL;
+    static const cString PROPERTY_DISTANCE_GAIN;
+    static const cString PROPERTY_AMPLITUDE_GAIN;
     static const cString PROPERTY_CAMERA_LOG_LEVEL;
-    static const cString PROPERTY_CHANGE_CAMERA_SETTINGS;
+    static const cString PROPERTY_UPDATE_CAMERA_SETTINGS;
     static const cString PROPERTY_CAMERA_SETTINGS_TCPIP_ADDR;
     static const cString PROPERTY_CAMERA_SETTINGS_TCPIP_PORT;
     static const cString PROPERTY_CAMERA_SETTINGS_IMAGE_FORMAT;
 
     static const tUInt32 PROPERTY_UDP_TIMEOUT_USEC_DEFAULT;
     static const tUInt16 PROPERTY_UDP_LISTENING_PORT_DEFAULT;
+    static const tFloat PROPERTY_CAMERA_MOUNT_POS_X_DEFAULT;
+    static const tFloat PROPERTY_CAMERA_MOUNT_POS_Y_DEFAULT;
+    static const tFloat PROPERTY_CAMERA_MOUNT_POS_Z_DEFAULT;
+    static const tFloat PROPERTY_CAMERA_MOUNT_PITCH_DEFAULT;
+    static const tFloat PROPERTY_CAMERA_MOUNT_YAW_DEFAULT;
+    static const tFloat PROPERTY_CAMERA_MOUNT_ROLL_DEFAULT;
+    static const tUInt8 PROPERTY_DISTANCE_GAIN_DEFAULT;
+    static const tUInt8 PROPERTY_AMPLITUDE_GAIN_DEFAULT;
     static const tUInt8 PROPERTY_LOG_LEVEL_DEFAULT;
-    static const tBool PROPERTY_CHANGE_CAMERA_SETTINGS_DEFAULT;
+    static const tBool PROPERTY_UPDATE_CAMERA_SETTINGS_DEFAULT;
     static const cString PROPERTY_CAMERA_SETTINGS_TCPIP_ADDR_DEFAULT;
     static const tUInt16 PROPERTY_CAMERA_SETTINGS_TCPIP_PORT_DEFAULT;
     static const tUInt8 PROPERTY_CAMERA_SETTINGS_IMAGE_FORMAT_DEFAULT;
@@ -108,8 +130,13 @@ private:
     std::unique_ptr<UdpFrame::FrameController> m_frameController;
     adtf::cVideoPin m_outputDistanceImage;
     adtf::cVideoPin m_outputAmplitudeImage;
+    adtf::cOutputPin m_outputScanData;
     adtf_util::cImage m_distanceImage;
     adtf_util::cImage m_amplitudeImage;
-    tUInt8* m_sendBuffer;
+    tInt8 m_distGain;
+    tInt8 m_ampGain;
+    sScanData3D m_scanData3D;
+    tUInt8* m_imageBuffer;
+    tUInt8* m_scanDataBuffer;
 };
 #endif // EB_ROBINOS_TOF_MOTION_CAMERA_H
