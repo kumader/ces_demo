@@ -452,7 +452,7 @@ int main(int argc, char* argv[])
 			{
 				if (matches == 0)
 				{
-					std::cout << "ERROR: At least one target stream not found, please check \"-t\" arguments" << std::endl;
+					std::cout << "ERROR: No target streams not found, please check \"-t\" arguments" << std::endl;
 					return static_cast<int>(ErrorCodes::STREAM_NOT_FOUND_ERROR);
 				}
 				else
