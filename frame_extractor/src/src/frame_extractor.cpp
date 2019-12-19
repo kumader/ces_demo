@@ -553,8 +553,11 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				std::cout << "ERROR: Target stream not found, please check \"-t\" arguments" << std::endl;
-				return static_cast<int>(ErrorCodes::STREAM_NOT_FOUND_ERROR);
+				if (matches == 0)
+				{
+					std::cout << "ERROR: Target stream not found, please check \"-t\" arguments" << std::endl;
+					return static_cast<int>(ErrorCodes::STREAM_NOT_FOUND_ERROR);
+				}
 			}			
 		}
 
