@@ -77,14 +77,16 @@ private:
     * @return ADTF error code
     */
     tResult UpdateCameraSettings(Common::UseLogger::LogLevel_e i_logLevel, tUInt32 i_timeoutUsec);
-    tResult PopulatePointCloudFromDistanceMap();
+    void PopulatePointCloudFromDistanceMap();
     
     void LogInfo(cString infoString);
     void LogError(cString errorString);
+
+    static void ApplyGain(tUInt8* data, tUInt8 gain, tInt size);
+    //static tUInt16 ReverseBits(const tUInt16 num);
     //void ConvertDistanceImage(sScanData* outScanData);
     //static std::vector<tUInt8> convertScalarRasterToRedGreenRaster(tUInt8* input, tUInt64 size);
     //static void interpolateScalarToRedGreen(tUInt16 scalar, tUInt8& outRed, tUInt8& outGreen);
-    static void ApplyGain(tUInt8* data, tUInt8 gain, tUInt64 size);
 
 
     static const cString PROPERTY_UDP_TIMEOUT_USEC;
@@ -126,6 +128,9 @@ private:
     static const tUInt16 TOF_RESOLUTION_Y;
     static const tUInt16 TOF_BYTES_PER_LINE;
     static const tUInt32 TOF_FRAME_SIZE;
+
+    static const tFloat TOF_HORIZONTAL_FOV;
+    static const tFloat TOF_VERTICAL_FOV;
 
     std::unique_ptr<UdpFrame::FrameController> m_frameController;
     adtf::cVideoPin m_outputDistanceImage;

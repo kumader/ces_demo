@@ -25,14 +25,13 @@ const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_POS_Z = "Filter Sett
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_PITCH = "Filter Settings::Camera Mounting Pitch (x-rotation)";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_YAW = "Filter Settings::Camera Mounting Yaw (y-rotation)";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_ROLL = "Filter Settings::Camera Mounting Roll (z-rotation)";
-const cString cTofMotionCameraFilter::PROPERTY_DISTANCE_GAIN = "Filter Settings::Distance value gain (decibels)";
-const cString cTofMotionCameraFilter::PROPERTY_AMPLITUDE_GAIN = "Filter Settings::Amplitude value gain (decibels)";
+const cString cTofMotionCameraFilter::PROPERTY_DISTANCE_GAIN = "Filter Settings::Distance gain (decibels)";
+const cString cTofMotionCameraFilter::PROPERTY_AMPLITUDE_GAIN = "Filter Settings::Amplitude gain (decibels)";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_LOG_LEVEL = "ToF Motion Camera Settings::Log Level\n0 = No Logging\n1 = Error\n2 = Warning\n3 = Info\n4 = Debug";
 const cString cTofMotionCameraFilter::PROPERTY_UPDATE_CAMERA_SETTINGS = "ToF Motion Camera Settings::Change Camera Settings\nTrue: Update ToF camera settings upon next initialization\nFalse: Do not update camera settings";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_SETTINGS_TCPIP_ADDR = "ToF Motion Camera Settings::TCP/IPv4 Address";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_SETTINGS_TCPIP_PORT = "ToF Motion Camera Settings::TCP/IPv4 Port";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_SETTINGS_IMAGE_FORMAT = "ToF Motion Camera Settings::Output Image Format\n0 = DISTAMP\n3 = XYZ\n4 = XYZA\n9 = DISTXYZ\n10 = OPTAXIS\n11 = TESTMODE\n12 = DIST\n13 = RAWDISTAMP\n23 = DISTAMPBAL\n24 = RAWPHASES";
-
 
 const tUInt32 cTofMotionCameraFilter::PROPERTY_UDP_TIMEOUT_USEC_DEFAULT = 100000;
 const tUInt16 cTofMotionCameraFilter::PROPERTY_UDP_LISTENING_PORT_DEFAULT = 10002;
@@ -61,6 +60,10 @@ const tUInt16 cTofMotionCameraFilter::TOF_BYTES_PER_LINE = cTofMotionCameraFilte
 const tUInt32 cTofMotionCameraFilter::TOF_FRAME_SIZE = 2 * (cTofMotionCameraFilter::TOF_BYTES_PER_LINE *
                                                             cTofMotionCameraFilter::TOF_RESOLUTION_Y) +
                                                        cTofMotionCameraFilter::TOF_FRAME_HEADER_SIZE_BYTES;
+
+//from spec sheet at https://drive.google.com/file/d/1SsqQaMEJybtkXtcVUCpcJ3YrC9h29nkH/view
+const tFloat cTofMotionCameraFilter::TOF_HORIZONTAL_FOV = 1.0821f;
+const tFloat cTofMotionCameraFilter::TOF_VERTICAL_FOV = 0.837758f;
 
 ADTF_FILTER_PLUGIN(cTofMotionCameraFilter::NAME_ADTF_TOF_MOTION_CAMERA_FILTER,
                    cTofMotionCameraFilter::OID_ADTF_TOF_MOTION_CAMERA_FILTER,
@@ -278,10 +281,7 @@ tResult cTofMotionCameraFilter::Cycle(__exception)
         m_amplitudeImage.SetBits(startIndex + m_distanceImage.GetSize(),
                                  m_amplitudeImage.GetFormat());
 
-        if (!PopulatePointCloudFromDistanceMap())
-        {
-            LogError("Unable to convert depth map to point cloud");
-        }
+        PopulatePointCloudFromDistanceMap();
 
         return SendOutputs();
     }
@@ -413,15 +413,46 @@ tResult cTofMotionCameraFilter::UpdateCameraSettings(Common::UseLogger::LogLevel
         }
     }
 
-
     //TODO: Add other settings
 
     RETURN_NOERROR;
 }
 
-tResult cTofMotionCameraFilter::PopulatePointCloudFromDistanceMap()
+void cTofMotionCameraFilter::PopulatePointCloudFromDistanceMap()
 {
-    RETURN_NOERROR;
+    tUInt8* distMap = m_distanceImage.GetBitmap();
+    tInt size = m_distanceImage.GetSize();
+    //FILE* f = fopen("d:\\pcl.txt", "a");
+    //fputs("start\n", f);
+
+    for (tInt i = 0; i < size / 2; ++i)
+    {
+        tInt mapIndex = 2 * i;
+     
+        tUInt row = i / TOF_RESOLUTION_X;
+        tUInt col = i % TOF_RESOLUTION_X;
+
+        //tUInt16 depth = distMap[mapIndex] << 8 | distMap[mapIndex + 1]; //nope, looks terrible
+        tUInt16 depth = distMap[mapIndex + 1] << 8 | distMap[mapIndex]; //why does reversed order bytes provide the most sensical depth values?
+        //tUInt16 depth = ReverseBits(distMap[mapIndex] << 8 | distMap[mapIndex + 1]); //nope, looks terrible
+
+        tFloat alphaH = (M_PI - TOF_HORIZONTAL_FOV) / 2;
+        tFloat gammaH = alphaH + (col * (TOF_HORIZONTAL_FOV / TOF_RESOLUTION_X));
+        m_scanData3D.points[i].lidarPoint.x = static_cast<tFloat32>(depth / tan(gammaH));
+
+        tFloat alphaV = (2 * M_PI) - (TOF_VERTICAL_FOV / 2);
+        tFloat gammaV = alphaV + (row * (TOF_VERTICAL_FOV / TOF_RESOLUTION_Y));
+        m_scanData3D.points[i].lidarPoint.y = static_cast<tFloat32>(-depth * tan(gammaV));
+
+        m_scanData3D.points[i].lidarPoint.z = depth;
+
+        //stringstream ss;
+        //ss << m_scanData3D.points[i].lidarPoint.x << " " << m_scanData3D.points[i].lidarPoint.y << " " << m_scanData3D.points[i].lidarPoint.z << endl;
+
+        //fputs(ss.str().c_str(), f);
+    }
+    //fputs("end\n", f);
+    //fclose(f);
 }
 
 void cTofMotionCameraFilter::LogInfo(cString infoString)
@@ -438,15 +469,15 @@ void cTofMotionCameraFilter::LogError(cString errorString)
     LOG_ERROR(ss.str().c_str());
 }
 
-void cTofMotionCameraFilter::ApplyGain(tUInt8* data, tUInt8 gain, tUInt64 size)
+void cTofMotionCameraFilter::ApplyGain(tUInt8* data, tUInt8 gain, tInt size)
 {
-    tFloat delta_intensity = pow(2.0, gain / 10);
+    tFloat deltaIntensity = pow(2.0, gain / 10);
 
-    for (tUInt64 i = 0; i < size; i += 2)
+    for (tInt i = 0; i < size; i += 2)
     {
         tUInt16 value = data[i] << 8 | data[i + 1];
 
-        tUInt32 amplified = static_cast<tUInt32>(value * delta_intensity);
+        tUInt32 amplified = static_cast<tUInt32>(value * deltaIntensity);
 
         if (amplified > UINT16_MAX)
         {
@@ -459,6 +490,26 @@ void cTofMotionCameraFilter::ApplyGain(tUInt8* data, tUInt8 gain, tUInt64 size)
         data[i + 1] = value & 0x00FF;
     }
 }
+
+//tUInt16 cTofMotionCameraFilter::ReverseBits(const tUInt16 input)
+//{
+//    tUInt16 num = input;
+//    tUInt16 reversed = num;
+//    tUInt8 count = sizeof(num) * 8 - 1;
+//
+//    num >>= 1;
+//
+//    while (num)
+//    {
+//        reversed <<= 1;
+//        reversed |= num & 0x1;
+//        num >>= 1;
+//        --count;
+//    }
+//
+//    reversed <<= count;
+//    return reversed;
+//}
 
 //void cTofMotionCameraFilter::ConvertDistanceImage(sScanData* outScanData)
 //{
