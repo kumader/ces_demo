@@ -237,7 +237,8 @@ bool parseArgs(int argc,
                std::string& outPath,
                std::string& outFormat,
                uint32_t& skipRate,
-			   bool& downscale)
+			   bool& downscale,
+	           bool& interactive)
 {
 	bool result = true;
 
@@ -245,72 +246,75 @@ bool parseArgs(int argc,
 	uint8_t outputPathCount = 0;
 	uint8_t formatCount = 0;
 	uint8_t skipRateCount = 0;
+	downscale = false;
+	interactive = true;
 
 	for (int i = 1; i < argc; ++i)
 	{
 		std::string optionType = argv[i];
 		transform(optionType.begin(), optionType.end(), optionType.begin(), tolower);
 
-		if (++i < argc)
+		if (optionType.compare("-i") == 0 && i + 1 < argc)
 		{
-			if (optionType.compare("-i") == 0)
-			{
-				inputFile = argv[i];
+			inputFile = argv[++i];
 
-				if (++inputFileCount > 1)
-				{
-					std::cerr << "ERROR: Maximum number of input file arguments is 1" << std::endl;
-					result = false;
-					break;
-				}
-			}
-			else if (optionType.compare("-t") == 0)
+			if (++inputFileCount > 1)
 			{
-				targetPinNames.push_back(argv[i]);
-			}
-			else if (optionType.compare("-o") == 0)
-			{
-				outPath = argv[i];
-
-				if (++outputPathCount > 1)
-				{
-					std::cerr << "ERROR: Maximum number of output path arguments is 1" << std::endl;
-					result = false;
-					break;
-				}
-			}
-			else if (optionType.compare("-f") == 0)
-			{
-				outFormat = argv[i];
-
-				if (++formatCount > 1)
-				{
-					std::cerr << "ERROR: Maximum number of format arguments is 1" << std::endl;
-					result = false;
-					break;
-				}
-			}
-			else if (optionType.compare("-s") == 0)
-			{
-				skipRate = std::abs(std::stoi(argv[i]));
-
-				if (++skipRateCount > 1)
-				{
-					std::cerr << "ERROR: Maximum number of skip rate arguments is 1" << std::endl;
-					result = false;
-					break;
-				}
-			}
-			else if (optionType.compare("-d") == 0)
-			{
-				downscale = true;
-			}
-			else
-			{
-				std::cerr << "ERROR: Unexpected argument: " << optionType << std::endl;
+				std::cerr << "ERROR: Maximum number of input file arguments is 1" << std::endl;
 				result = false;
 				break;
 			}
+		}
+		else if (optionType.compare("-t") == 0 && i + 1 < argc)
+		{
+			targetPinNames.push_back(argv[++i]);
+		}
+		else if (optionType.compare("-o") == 0 && i + 1 < argc)
+		{
+			outPath = argv[++i];
+
+			if (++outputPathCount > 1)
+			{
+				std::cerr << "ERROR: Maximum number of output path arguments is 1" << std::endl;
+				result = false;
+				break;
+			}
+		}
+		else if (optionType.compare("-f") == 0 && i + 1 < argc)
+		{
+			outFormat = argv[++i];
+
+			if (++formatCount > 1)
+			{
+				std::cerr << "ERROR: Maximum number of format arguments is 1" << std::endl;
+				result = false;
+				break;
+			}
+		}
+		else if (optionType.compare("-s") == 0 && i + 1 < argc)
+		{
+			skipRate = std::abs(std::stoi(argv[++i]));
+
+			if (++skipRateCount > 1)
+			{
+				std::cerr << "ERROR: Maximum number of skip rate arguments is 1" << std::endl;
+				result = false;
+				break;
+			}
+		}
+		else if (optionType.compare("-d") == 0)
+		{
+			downscale = true;
+		}
+		else if (optionType.compare("-n") == 0)
+		{
+			interactive = false;
+		}
+		else
+		{
+			std::cerr << "ERROR: Unexpected argument: " << optionType << std::endl;
+			result = false;
+			break;
 		}
 	}
 
@@ -334,6 +338,7 @@ int main(int argc, char* argv[])
 	std::string outFormat;
 	uint32_t skipRate = 0;
 	bool downscale = false;
+	bool interactive = true;
 
 	if (!parseArgs(argc,
 		           argv,
@@ -342,10 +347,11 @@ int main(int argc, char* argv[])
 		           outPath,
 		           outFormat,
 		           skipRate,
-		           downscale))
+		           downscale,
+		           interactive))
 	{
 		std::cerr << "usage: \n"
-			<< argv[0] << " -i <DAT File Path> -t <Target Output Stream(s)> -o <Output Path> -f <Output Image Format> -s <Optional: Frame Skip Rate> -d <Optional: Downscale Output>" << std::endl
+			<< argv[0] << " -i <DAT File Path> -t <Target Output Stream(s)> -o <Output Path> -f <Output Image Format> -s <Optional: Frame Skip Rate> -d <Optional: Downscale Output> -n <Optional: Disable Interactive Mode>" << std::endl
 			<< "e.g. " << argv[0] << " -i c:\\data.dat -t out_stream -o c:\\output -f MP4";
 		return static_cast<int>(ErrorCodes::ARGUMENT_ERROR);
 	}
@@ -362,7 +368,8 @@ int main(int argc, char* argv[])
 	std::cout << "Target Pin(s) : " << os.str() << std::endl;
 	std::cout << "Output Path   : " << outPath << std::endl;
 	std::cout << "Output Format : " << outFormat << std::endl;
-	std::cout << "Downscale : " << std::boolalpha << downscale << std::endl;
+	std::cout << "Downscale     : " << std::boolalpha << downscale << std::endl;
+	std::cout << "Interactive   : " << std::boolalpha << interactive << std::endl;
 
 	struct stat info;
 
@@ -443,8 +450,54 @@ int main(int argc, char* argv[])
 		{
 			if (matches < targetPinNames.size())
 			{
-				std::cout << "ERROR: At least one target stream not found, please check \"-t\" arguments" << std::endl;
-				return static_cast<int>(ErrorCodes::STREAM_NOT_FOUND_ERROR);
+				if (matches == 0)
+				{
+					std::cout << "ERROR: At least one target stream not found, please check \"-t\" arguments" << std::endl;
+					return static_cast<int>(ErrorCodes::STREAM_NOT_FOUND_ERROR);
+				}
+				else
+				{
+					if (interactive)
+					{
+						uint32_t numTargets = targetPinNames.size() - matches;
+						bool interactiveLoop = true;
+
+						while (interactiveLoop)
+						{
+							std::cout << "\n" << numTargets << " of " << targetPinNames.size() << " target pins found. Continue with following streams?" << std::endl;
+							
+							for (uint32_t i = 0; i < targetStreams.size(); ++i)
+							{
+								std::cout << i + 1 << ") " << targetStreams[i].first.name << std::endl;
+							}
+							std::cout << "(y/n) ";
+
+							char c;
+							std::cin >> c;
+
+							if (c == 'y' || c == 'Y')
+							{
+								interactiveLoop = false;
+							}
+							else if (c == 'n' || c == 'N')
+							{
+								std::cout << "Exiting application." << std::endl;
+								return static_cast<int>(ErrorCodes::SUCCESS);
+							}
+							else
+							{
+								std::cout << "\nInvalid response. Please try again." << std::endl;
+							}
+						}
+					}
+
+					std::cout << "\nContinuing data extraction on following streams:" << std::endl;
+
+					for (uint32_t i = 0; i < targetStreams.size(); ++i)
+					{
+						std::cout << i + 1 << ") " << targetStreams[i].first.name << std::endl;
+					}
+				}
 			}
 			else
 			{
@@ -463,38 +516,46 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			while (matches < 1)
+			if (interactive)
 			{
-				std::cout << "\nNo matching stream found. Please select one of the following:\n" << std::endl;
-				for (uint32_t i = 0; i < streams.size(); ++i)
+				while (matches < 1)
 				{
-					std::cout << i + 1 << ") " << streams[i].name << std::endl;
-				}
+					std::cout << "\nNo matching stream found. Please select one of the following:\n" << std::endl;
+					for (uint32_t i = 0; i < streams.size(); ++i)
+					{
+						std::cout << i + 1 << ") " << streams[i].name << std::endl;
+					}
 
-				std::cout << streams.size() + 1 << ") Exit" << std::endl;
+					std::cout << streams.size() + 1 << ") Exit" << std::endl;
 
-				uint32_t n;
-				std::cin >> n;
-				
-				if (n <= streams.size())
-				{
-					++matches;
-					AdtfImageFormat format = { 0, 0, 0, "None" };
-					auto propertyStreamType = std::dynamic_pointer_cast<const adtf_file::PropertyStreamType>(streams[n - 1].initial_type);
-					GetImageStreamProperties(propertyStreamType, format);
-					targetStreams.push_back({ streams[n - 1], format });
-					targetPinNames[0] = streams[n - 1].name;
-				}
-				else if (n == streams.size() + 1)
-				{
-					std::cout << "Exiting application." << std::endl;
-					return static_cast<int>(ErrorCodes::SUCCESS);
-				}
-				else
-				{
-					std::cout << "\nInvalid response. Please try again." << std::endl;
+					uint32_t n;
+					std::cin >> n;
+
+					if (n <= streams.size())
+					{
+						++matches;
+						AdtfImageFormat format = { 0, 0, 0, "None" };
+						auto propertyStreamType = std::dynamic_pointer_cast<const adtf_file::PropertyStreamType>(streams[n - 1].initial_type);
+						GetImageStreamProperties(propertyStreamType, format);
+						targetStreams.push_back({ streams[n - 1], format });
+						targetPinNames[0] = streams[n - 1].name;
+					}
+					else if (n == streams.size() + 1)
+					{
+						std::cout << "Exiting application." << std::endl;
+						return static_cast<int>(ErrorCodes::SUCCESS);
+					}
+					else
+					{
+						std::cout << "\nInvalid response. Please try again." << std::endl;
+					}
 				}
 			}
+			else
+			{
+				std::cout << "ERROR: Target stream not found, please check \"-t\" arguments" << std::endl;
+				return static_cast<int>(ErrorCodes::STREAM_NOT_FOUND_ERROR);
+			}			
 		}
 
 		if (SUPPORTED_IMG_FORMATS.find(outFormat) != SUPPORTED_IMG_FORMATS.end() ||
