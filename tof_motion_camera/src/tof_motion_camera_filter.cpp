@@ -22,13 +22,14 @@ const cString cTofMotionCameraFilter::PROPERTY_UDP_LISTENING_PORT = "Filter Sett
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_POS_X = "Filter Settings::Camera Mounting Position X";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_POS_Y = "Filter Settings::Camera Mounting Position Y";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_POS_Z = "Filter Settings::Camera Mounting Position Z";
-const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_PITCH = "Filter Settings::Camera Mounting Pitch (x-rotation)";
-const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_YAW = "Filter Settings::Camera Mounting Yaw (y-rotation)";
-const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_ROLL = "Filter Settings::Camera Mounting Roll (z-rotation)";
+const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_PITCH = "Filter Settings::Camera Mounting Pitch (radians)";
+const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_YAW = "Filter Settings::Camera Mounting Yaw (radians)";
+const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_ROLL = "Filter Settings::Camera Mounting Roll (radians)";
 const cString cTofMotionCameraFilter::PROPERTY_DISTANCE_GAIN = "Filter Settings::Distance gain (decibels)";
 const cString cTofMotionCameraFilter::PROPERTY_AMPLITUDE_GAIN = "Filter Settings::Amplitude gain (decibels)";
+
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_LOG_LEVEL = "ToF Motion Camera Settings::Log Level\n0 = No Logging\n1 = Error\n2 = Warning\n3 = Info\n4 = Debug";
-const cString cTofMotionCameraFilter::PROPERTY_UPDATE_CAMERA_SETTINGS = "ToF Motion Camera Settings::Change Camera Settings\nTrue: Update ToF camera settings upon next initialization\nFalse: Do not update camera settings";
+const cString cTofMotionCameraFilter::PROPERTY_UPDATE_CAMERA_SETTINGS = "ToF Motion Camera Settings::Update Camera Settings\nTrue: Update ToF camera settings upon next initialization\nFalse: Do not update camera settings";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_SETTINGS_TCPIP_ADDR = "ToF Motion Camera Settings::TCP/IPv4 Address";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_SETTINGS_TCPIP_PORT = "ToF Motion Camera Settings::TCP/IPv4 Port";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_SETTINGS_IMAGE_FORMAT = "ToF Motion Camera Settings::Output Image Format\n0 = DISTAMP\n3 = XYZ\n4 = XYZA\n9 = DISTXYZ\n10 = OPTAXIS\n11 = TESTMODE\n12 = DIST\n13 = RAWDISTAMP\n23 = DISTAMPBAL\n24 = RAWPHASES";
@@ -352,7 +353,8 @@ tResult cTofMotionCameraFilter::SendOutputs()
     return NOERROR;
 }
 
-tResult cTofMotionCameraFilter::UpdateCameraSettings(Common::UseLogger::LogLevel_e logLevel, tUInt32 timeoutUsec)
+tResult cTofMotionCameraFilter::UpdateCameraSettings(const Common::UseLogger::LogLevel_e logLevel,
+                                                     const tUInt32 timeoutUsec)
 {
     std::string ipv4Address = static_cast<std::string>(GetPropertyStr(PROPERTY_CAMERA_SETTINGS_TCPIP_ADDR));
     tUInt16 ipv4Port = static_cast<tUInt16>(GetPropertyInt(PROPERTY_CAMERA_SETTINGS_TCPIP_PORT));
@@ -429,47 +431,142 @@ void cTofMotionCameraFilter::PopulatePointCloudFromDistanceMap()
     {
         tInt mapIndex = 2 * i;
      
-        tUInt row = i / TOF_RESOLUTION_X;
-        tUInt col = i % TOF_RESOLUTION_X;
+        tUInt sampleY = i / TOF_RESOLUTION_X;
+        tUInt sampleX = i % TOF_RESOLUTION_X;
 
         //tUInt16 depth = distMap[mapIndex] << 8 | distMap[mapIndex + 1]; //nope, looks terrible
         tUInt16 depth = distMap[mapIndex + 1] << 8 | distMap[mapIndex]; //why does reversed order bytes provide the most sensical depth values?
         //tUInt16 depth = ReverseBits(distMap[mapIndex] << 8 | distMap[mapIndex + 1]); //nope, looks terrible
 
         tFloat alphaH = (M_PI - TOF_HORIZONTAL_FOV) / 2;
-        tFloat gammaH = alphaH + (col * (TOF_HORIZONTAL_FOV / TOF_RESOLUTION_X));
-        m_scanData3D.points[i].lidarPoint.x = static_cast<tFloat32>(depth / tan(gammaH));
+        tFloat gammaH = alphaH + (sampleX * (TOF_HORIZONTAL_FOV / TOF_RESOLUTION_X));
+        //m_scanData3D.points[i].lidarPoint.x = static_cast<tFloat32>(depth / tan(gammaH));
+        tFloat32 x = static_cast<tFloat32>(depth / tan(gammaH));
 
         tFloat alphaV = (2 * M_PI) - (TOF_VERTICAL_FOV / 2);
-        tFloat gammaV = alphaV + (row * (TOF_VERTICAL_FOV / TOF_RESOLUTION_Y));
-        m_scanData3D.points[i].lidarPoint.y = static_cast<tFloat32>(-depth * tan(gammaV));
+        tFloat gammaV = alphaV + (sampleY * (TOF_VERTICAL_FOV / TOF_RESOLUTION_Y));
+        //m_scanData3D.points[i].lidarPoint.y = static_cast<tFloat32>(-depth * tan(gammaV));
+        tFloat32 y = m_scanData3D.points[i].lidarPoint.y = static_cast<tFloat32>(-depth * tan(gammaV));
 
-        m_scanData3D.points[i].lidarPoint.z = depth;
+        //m_scanData3D.points[i].lidarPoint.z = depth;
+        tFloat32 z = depth;
 
-        //stringstream ss;
-        //ss << m_scanData3D.points[i].lidarPoint.x << " " << m_scanData3D.points[i].lidarPoint.y << " " << m_scanData3D.points[i].lidarPoint.z << endl;
-
-        //fputs(ss.str().c_str(), f);
+        m_scanData3D.points[i].lidarPoint.x = x;
+        m_scanData3D.points[i].lidarPoint.y = y;
+        m_scanData3D.points[i].lidarPoint.z = z;
     }
+
+    //rotate dataset to about camera origin before translating to mounting position
+    RotateScanData(m_scanData3D.mountingPosition.pitch,
+                   m_scanData3D.mountingPosition.yaw,
+                   m_scanData3D.mountingPosition.roll);
+
+    //rescale dataset from millimeters to meters
+    ScaleScanData(0.001f, 0.001f, 0.001f);
+
+    //translate dataset from camera origin to mounting position
+    TranslateScanData(m_scanData3D.mountingPosition.x,
+                      m_scanData3D.mountingPosition.y,
+                      m_scanData3D.mountingPosition.z);
+
+    //for (tUInt32 i = 0; i < m_scanData3D.pointsCount; ++i)
+    //{
+    //    stringstream ss;
+    //    ss << m_scanData3D.points[i].lidarPoint.x << " " << m_scanData3D.points[i].lidarPoint.y << " " << m_scanData3D.points[i].lidarPoint.z << endl;
+
+    //    fputs(ss.str().c_str(), f);
+    //}
+
     //fputs("end\n", f);
     //fclose(f);
 }
 
-void cTofMotionCameraFilter::LogInfo(cString infoString)
+void cTofMotionCameraFilter::RotateScanData(const tFloat64 deltaPitch,
+                                            const tFloat64 deltaYaw,
+                                            const tFloat64 deltaRoll)
 {
-    stringstream ss;
-    ss << OID_ADTF_TOF_MOTION_CAMERA_FILTER << ": " << infoString;
-    LOG_INFO(ss.str().c_str());
+    //set up rotation matrices
+    tFloat64 xRotMatrix[3][3] = { {1.0f, 0.0f, 0.0f},
+                                  {0.0f, cos(deltaPitch), sin(deltaPitch)},
+                                  {0.0f, -sin(deltaPitch), cos(deltaPitch)} };
+    tFloat64 yRotMatrix[3][3] = { {cos(deltaYaw), 0.0f, -sin(deltaYaw)},
+                                  {0.0f, 1.0f, 0.0f},
+                                  {sin(deltaYaw), 0.0f, cos(deltaYaw)} };
+    tFloat64 zRotMatrix[3][3] = { {cos(deltaRoll), sin(deltaRoll), 0.0f},
+                                  {-sin(deltaRoll), cos(deltaRoll), 0.0f},
+                                  {0.0f, 0.0f, 1.0f} };
+    tFloat64 xyResult[3][3] = { {0.0f, 0.0f, 0.0f},
+                                {0.0f, 0.0f, 0.0f},
+                                {0.0f, 0.0f, 0.0f} };
+    tFloat64 result[3][3] = { {0.0f, 0.0f, 0.0f},
+                              {0.0f, 0.0f, 0.0f},
+                              {0.0f, 0.0f, 0.0f} };
+
+    //concatenate x, y, and z matrices
+    Multiply3x3Matrices(xRotMatrix, yRotMatrix, xyResult);
+    Multiply3x3Matrices(xyResult, zRotMatrix, result);
+
+    for (tUInt32 i = 0; i < m_scanData3D.pointsCount; ++i)
+    {
+        tFloat32 x = m_scanData3D.points[i].lidarPoint.x;
+        tFloat32 y = m_scanData3D.points[i].lidarPoint.y;
+        tFloat32 z = m_scanData3D.points[i].lidarPoint.z;
+
+        tFloat32 xPrime = static_cast<tFloat32>((result[0][0] * x) + (result[0][1] * y) + (result[0][2] * z));
+        tFloat32 yPrime = static_cast<tFloat32>((result[1][0] * x) + (result[1][1] * y) + (result[1][2] * z));
+        tFloat32 zPrime = static_cast<tFloat32>((result[2][0] * x) + (result[2][1] * y) + (result[2][2] * z));
+
+        m_scanData3D.points[i].lidarPoint.x = xPrime;
+        m_scanData3D.points[i].lidarPoint.y = yPrime;
+        m_scanData3D.points[i].lidarPoint.z = zPrime;
+    }
 }
 
-void cTofMotionCameraFilter::LogError(cString errorString)
+void cTofMotionCameraFilter::ScaleScanData(const tFloat64 scaleX,
+                                           const tFloat64 scaleY,
+                                           const tFloat64 scaleZ)
 {
-    stringstream ss;
-    ss << OID_ADTF_TOF_MOTION_CAMERA_FILTER << ": " << errorString;
-    LOG_ERROR(ss.str().c_str());
+    for (tUInt32 i = 0; i < m_scanData3D.pointsCount; ++i)
+    {
+        m_scanData3D.points[i].lidarPoint.x = static_cast<tFloat32>(m_scanData3D.points[i].lidarPoint.x * scaleX);
+        m_scanData3D.points[i].lidarPoint.y = static_cast<tFloat32>(m_scanData3D.points[i].lidarPoint.y * scaleY);
+        m_scanData3D.points[i].lidarPoint.z = static_cast<tFloat32>(m_scanData3D.points[i].lidarPoint.z * scaleZ);
+    }
 }
 
-void cTofMotionCameraFilter::ApplyGain(tUInt8* data, tUInt8 gain, tInt size)
+void cTofMotionCameraFilter::TranslateScanData(const tFloat64 deltaX,
+                                               const tFloat64 deltaY,
+                                               const tFloat64 deltaZ)
+{
+    for (tUInt32 i = 0; i < m_scanData3D.pointsCount; ++i)
+    {
+        m_scanData3D.points[i].lidarPoint.x += static_cast<tFloat32>(deltaX);
+        m_scanData3D.points[i].lidarPoint.y += static_cast<tFloat32>(deltaY);
+        m_scanData3D.points[i].lidarPoint.z += static_cast<tFloat32>(deltaZ);
+    }
+}
+
+void cTofMotionCameraFilter::Multiply3x3Matrices(const tFloat64 m1[3][3],
+                                                 const tFloat64 m2[3][3],
+                                                 tFloat64 result[3][3])
+{
+    for (tUInt8 i = 0; i < 3; ++i)
+    {
+        for (tUInt8 j = 0; j < 3; ++j)
+        {
+            tFloat sum = 0.0f;
+
+            for (tUInt8 k = 0; k < 3; ++k)
+            {
+                sum += m1[j][k] * m2[k][i];
+            }
+
+            result[j][i] = sum;
+        }
+    }
+}
+
+void cTofMotionCameraFilter::ApplyGain(tUInt8* data, const tUInt8 gain, const tInt size)
 {
     tFloat deltaIntensity = pow(2.0, gain / 10);
 
@@ -489,6 +586,20 @@ void cTofMotionCameraFilter::ApplyGain(tUInt8* data, tUInt8 gain, tInt size)
         data[i] = value >> 8;
         data[i + 1] = value & 0x00FF;
     }
+}
+
+void cTofMotionCameraFilter::LogInfo(const cString infoString)
+{
+    stringstream ss;
+    ss << OID_ADTF_TOF_MOTION_CAMERA_FILTER << ": " << infoString;
+    LOG_INFO(ss.str().c_str());
+}
+
+void cTofMotionCameraFilter::LogError(const cString errorString)
+{
+    stringstream ss;
+    ss << OID_ADTF_TOF_MOTION_CAMERA_FILTER << ": " << errorString;
+    LOG_ERROR(ss.str().c_str());
 }
 
 //tUInt16 cTofMotionCameraFilter::ReverseBits(const tUInt16 input)
