@@ -4,9 +4,9 @@
  * @file
  * @copyright Copyright (c) 2015 Elektrobit Automotive GmbH. All rights reserved.
  *
- * @date    $Date:: 2016-08-31 #$
- * @version $Revision:: 3788    $
- * @author  $Author:: pike9269  $
+ * @date    $Date:: 2019-12-30  $
+ * @version $Revision:: 3801    $
+ * @author  $Author:: kumader   $
  */
 
 #ifndef EB_ROBINOS_TOF_MOTION_CAMERA_H
@@ -79,57 +79,10 @@ private:
     tResult UpdateCameraSettings(const Common::UseLogger::LogLevel_e i_logLevel,
                                  const tUInt32 i_timeoutUsec);
 
-    /**
-    * Calculates projection from distance map into 3D point cloud
-    * @param N/A
-    * @return void
-    */
-    void PopulatePointCloudFromDistanceMap();
-
-    /**
-    * Rotates points in m_scanData3D about the origin
-    * @param deltaPitch
-    * @param deltaYaw
-    * @param deltaRoll
-    * @return void
-    */
-    void RotateScanData(const tFloat64 deltaPitch,
-                        const tFloat64 deltaYaw,
-                        const tFloat64 deltaRoll);
-
-    /**
-    * Scales xyz data in m_scanData3D
-    * @param scaleX
-    * @param scaleY
-    * @param scaleZ
-    * @return void
-    */
-    void ScaleScanData(const tFloat64 scaleX,
-        const tFloat64 scaleY,
-        const tFloat64 scaleZ);
-
-    /**
-    * Translates points in m_scanData3D
-    * @param deltaX
-    * @param deltaY
-    * @param deltaZ
-    * @return void
-    */
-    void TranslateScanData(const tFloat64 deltaX,
-                           const tFloat64 deltaY,
-                           const tFloat64 deltaZ);
-
-    static void Multiply3x3Matrices(const tFloat64 m1[3][3],
-                                    const tFloat64 m2[3][3],
-                                    tFloat64 result[3][3]);
     static void ApplyGain(tUInt8* data, const tUInt8 gain, const tInt size);
 
     static void LogInfo(const cString infoString);
     static void LogError(const cString errorString);
-    //static tUInt16 ReverseBits(const tUInt16 num);
-    //void ConvertDistanceImage(sScanData* outScanData);
-    //static std::vector<tUInt8> convertScalarRasterToRedGreenRaster(tUInt8* input, tUInt64 size);
-    //static void interpolateScalarToRedGreen(tUInt16 scalar, tUInt8& outRed, tUInt8& outGreen);
 
     static const cString PROPERTY_UDP_TIMEOUT_USEC;
     static const cString PROPERTY_UDP_LISTENING_PORT;
@@ -186,4 +139,4 @@ private:
     tUInt8* m_imageBuffer;
     tUInt8* m_scanDataBuffer;
 };
-#endif // EB_ROBINOS_TOF_MOTION_CAMERA_H
+#endif EB_ROBINOS_TOF_MOTION_CAMERA_H

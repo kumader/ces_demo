@@ -4,8 +4,10 @@ file(GLOB_RECURSE SRCS *.cpp)
 file(GLOB_RECURSE HDRS *.h)
 
 set(FILES
+    math3d.h
     stdafx.h
     tof_motion_camera_filter.h
+    math3d.cpp
     stdafx.cpp
     tof_motion_camera_filter.cpp
     ${HDRS}
