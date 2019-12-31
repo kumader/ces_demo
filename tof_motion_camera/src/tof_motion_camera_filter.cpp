@@ -135,7 +135,7 @@ tResult cTofMotionCameraFilter::Shutdown(tInitStage i_stage, __exception)
 {
     if (m_frameController)
     {
-        m_frameController.release();
+        delete m_frameController.release();
     }
 
     if (m_imageBuffer)
@@ -418,7 +418,7 @@ tResult cTofMotionCameraFilter::UpdateCameraSettings(const Common::UseLogger::Lo
     {
         if (!cameraController.WriteRegister(imgFormatRegister))
         {
-            RETURN_ERROR(ERR_UNKNOWN_FORMAT);
+            RETURN_ERROR(ERR_NOT_CONNECTED);
         }
     }
 
@@ -433,7 +433,8 @@ void cTofMotionCameraFilter::ApplyGain(tUInt8* data, const tUInt8 gain, const tI
 
     for (tInt i = 0; i < size; i += 2)
     {
-        tUInt16 value = data[i] << 8 | data[i + 1];
+        //tUInt16 value = data[i] << 8 | data[i + 1];
+        tUInt16 value = data[i + 1] << 8 | data[i]; // must account for endianness issue with data (flipped here, put back into array flipped)
 
         tUInt32 amplified = static_cast<tUInt32>(value * deltaIntensity);
 
