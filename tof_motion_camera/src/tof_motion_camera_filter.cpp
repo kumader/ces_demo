@@ -373,10 +373,13 @@ tResult cTofMotionCameraFilter::UpdateCameraSettings(const Common::UseLogger::Lo
                                         logLevel,
                                         0,
                                         timeoutUsec);
-    std::string format = "DISTAMP";
+    std::string format;
 
     switch (imageFormat)
     {
+    case 0:
+        format = "DISTAMP";
+        break;
     case 3:
         format = "XYZ";
         break;
