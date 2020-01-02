@@ -106,8 +106,8 @@ void Math3D::PopulateScanDataFromDistanceMap(const tUInt8* distanceMap,
                                              const tInt distanceMapSize,
                                              const tUInt16 distanceMapResolutionX,
                                              const tUInt16 distanceMapResolutionY,
-                                             const tFloat horizontalFoV,
-                                             const tFloat verticalFoV,
+                                             const tFloat64 horizontalFoV,
+                                             const tFloat64 verticalFoV,
                                              sScanData3D* scanData)
 {
     //FILE* f = fopen("d:\\pcl.txt", "a");
@@ -124,13 +124,13 @@ void Math3D::PopulateScanDataFromDistanceMap(const tUInt8* distanceMap,
         tUInt16 depth = distanceMap[mapIndex + 1] << 8 | distanceMap[mapIndex]; //why does reversed order bytes provide the most sensical depth values?
         //tUInt16 depth = ReverseBits(distMap[mapIndex] << 8 | distMap[mapIndex + 1]); //nope, looks terrible
 
-        tFloat alphaH = (M_PI - horizontalFoV) / 2;
-        tFloat gammaH = alphaH + (sampleX * (horizontalFoV / distanceMapResolutionX));
+        tFloat64 alphaH = (M_PI - horizontalFoV) / 2;
+        tFloat64 gammaH = alphaH + (sampleX * (horizontalFoV / distanceMapResolutionX));
         //m_scanData3D.points[i].lidarPoint.x = static_cast<tFloat32>(depth / tan(gammaH));
         tFloat32 x = static_cast<tFloat32>(depth / tan(gammaH));
 
-        tFloat alphaV = (2 * M_PI) - (verticalFoV / 2);
-        tFloat gammaV = alphaV + (sampleY * (verticalFoV / distanceMapResolutionY));
+        tFloat64 alphaV = (2 * M_PI) - (verticalFoV / 2);
+        tFloat64 gammaV = alphaV + (sampleY * (verticalFoV / distanceMapResolutionY));
         //m_scanData3D.points[i].lidarPoint.y = static_cast<tFloat32>(-depth * tan(gammaV));
         tFloat32 y = static_cast<tFloat32>(-depth * tan(gammaV));
 
@@ -149,7 +149,7 @@ void Math3D::PopulateScanDataFromDistanceMap(const tUInt8* distanceMap,
                    scanData->mountingPosition.roll);
 
     //rescale dataset from millimeters to meters
-    ScaleScanData(scanData, 0.001f, 0.001f, 0.001f);
+    ScaleScanData(scanData, 0.001, 0.001, 0.001);
 
     //translate dataset from camera origin to mounting position
     TranslateScanData(scanData,

@@ -18,7 +18,7 @@
 const tChar* cTofMotionCameraFilter::OID_ADTF_TOF_MOTION_CAMERA_FILTER = "adtf.eb.tofmotion";
 const tChar* cTofMotionCameraFilter::NAME_ADTF_TOF_MOTION_CAMERA_FILTER = "ToF Motion Camera Filter";
 
-const cString cTofMotionCameraFilter::PROPERTY_UDP_TIMEOUT_USEC = "Filter Settings::Timeout usec";
+const cString cTofMotionCameraFilter::PROPERTY_UDP_TIMEOUT_USEC = "Filter Settings::Timeout (usec)";
 const cString cTofMotionCameraFilter::PROPERTY_UDP_LISTENING_PORT = "Filter Settings::UDP Listening Port";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_POS_X = "Filter Settings::Camera Mounting Position X";
 const cString cTofMotionCameraFilter::PROPERTY_CAMERA_MOUNT_POS_Y = "Filter Settings::Camera Mounting Position Y";

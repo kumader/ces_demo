@@ -79,8 +79,8 @@ public:
                                                 const tInt distanceMapSize, //I don't know why Image::GetSize() returns a signed int, oh well
                                                 const tUInt16 distanceMapResolutionX,
                                                 const tUInt16 distanceMapResolutionY,
-                                                const tFloat horizontalFoV,
-                                                const tFloat verticalFoV,
+                                                const tFloat64 horizontalFoV,
+                                                const tFloat64 verticalFoV,
                                                 sScanData3D* scanData);
 };
 #endif EB_ROBINOS_TOF_MOTION_CAMERA_MATH_3D_H
