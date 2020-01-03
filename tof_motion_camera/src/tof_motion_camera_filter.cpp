@@ -80,8 +80,10 @@ cTofMotionCameraFilter::cTofMotionCameraFilter(const tChar* __info) :
     m_distanceImage(),
     m_amplitudeImage(),
     m_scanData3D(TOF_RESOLUTION_X * TOF_RESOLUTION_Y),
-    m_imageBuffer(NULL),
-    m_scanDataBuffer(NULL)
+    m_distImgBuffer(NULL),
+    m_ampImgBuffer(NULL),
+    m_scanDataBuffer(NULL),
+    m_frameBuffer(NULL)
 {
     //Filter settings
     SetPropertyInt(PROPERTY_UDP_TIMEOUT_USEC,
@@ -138,16 +140,28 @@ tResult cTofMotionCameraFilter::Shutdown(tInitStage i_stage, __exception)
         delete m_frameController.release();
     }
 
-    if (m_imageBuffer)
+    if (m_distImgBuffer)
     {
-        delete[] m_imageBuffer;
-        m_imageBuffer = NULL;
+        delete[] m_distImgBuffer;
+        m_distImgBuffer = NULL;
+    }
+
+    if (m_ampImgBuffer)
+    {
+        delete[] m_ampImgBuffer;
+        m_ampImgBuffer = NULL;
     }
 
     if (m_scanDataBuffer)
     {
         delete[] m_scanDataBuffer;
         m_scanDataBuffer = NULL;
+    }
+
+    if (m_frameBuffer)
+    {
+        delete[] m_frameBuffer;
+        m_frameBuffer = NULL;
     }
 
     return cTimeTriggeredFilter::Shutdown(i_stage, __exception_ptr);
@@ -231,7 +245,9 @@ tResult cTofMotionCameraFilter::Init(tInitStage i_stage, __exception)
         m_outputDistanceImage.SetFormat(&format, NULL);
         m_outputAmplitudeImage.SetFormat(&format, NULL);
 
-        m_imageBuffer = new tUInt8[m_distanceImage.GetSize()];
+        m_distImgBuffer = new tUInt8[m_distanceImage.GetSize()];
+        m_ampImgBuffer = new tUInt8[m_amplitudeImage.GetSize()];
+        m_frameBuffer = new tUInt8[TOF_FRAME_SIZE];
 
         m_scanData3D.mountingPosition = sPoint6D<tFloat>(GetPropertyFloat(PROPERTY_CAMERA_MOUNT_POS_X),
                                                          GetPropertyFloat(PROPERTY_CAMERA_MOUNT_POS_Y),
@@ -255,13 +271,12 @@ tResult cTofMotionCameraFilter::Init(tInitStage i_stage, __exception)
 tResult cTofMotionCameraFilter::Cycle(__exception)
 {
     tUInt32 offset = 0;
-    tUInt8 frameBuffer[TOF_FRAME_SIZE];
 
-    if (m_frameController->GetFrame(frameBuffer,
+    if (m_frameController->GetFrame(m_frameBuffer,
                                     TOF_FRAME_SIZE,
                                     offset))
     {
-        tUInt8* startIndex = frameBuffer + TOF_FRAME_HEADER_SIZE_BYTES;
+        tUInt8* startIndex = m_frameBuffer + TOF_FRAME_HEADER_SIZE_BYTES;
 
         if (m_distGain > 0)
         {
@@ -303,32 +318,33 @@ tResult cTofMotionCameraFilter::Cycle(__exception)
 
 tResult cTofMotionCameraFilter::SendOutputs()
 {
-    memcpy(m_imageBuffer, m_distanceImage.GetBitmap(), m_distanceImage.GetSize());
-    cObjectPtr<IMediaSample> mediaSample;
+    memcpy(m_distImgBuffer, m_distanceImage.GetBitmap(), m_distanceImage.GetSize());
+    cObjectPtr<IMediaSample> distMediaSample;
 
-    if (IS_OK(AllocMediaSample((tVoid**)&mediaSample, OID_ADTF_MEDIA_SAMPLE)))
+    if (IS_OK(AllocMediaSample((tVoid**)&distMediaSample, OID_ADTF_MEDIA_SAMPLE)))
     {
-        if (IS_OK(mediaSample->Update(_clock->GetStreamTime(),
-                                      (tVoid*)m_imageBuffer,
+        if (IS_OK(distMediaSample->Update(_clock->GetStreamTime(),
+                                      (tVoid*)m_distImgBuffer,
                                       m_distanceImage.GetSize(),
                                       IMediaSample::MSF_None)))
         {
             LogInfo("Distance image transmitted successfully");
-            m_outputDistanceImage.Transmit(mediaSample);
+            m_outputDistanceImage.Transmit(distMediaSample);
         }
     }
 
-    memcpy(m_imageBuffer, m_amplitudeImage.GetBitmap(), m_amplitudeImage.GetSize());
+    memcpy(m_ampImgBuffer, m_amplitudeImage.GetBitmap(), m_amplitudeImage.GetSize());
+    cObjectPtr<IMediaSample> ampMediaSample;
 
-    if (IS_OK(AllocMediaSample((tVoid**)&mediaSample, OID_ADTF_MEDIA_SAMPLE)))
+    if (IS_OK(AllocMediaSample((tVoid**)&ampMediaSample, OID_ADTF_MEDIA_SAMPLE)))
     {
-        if (IS_OK(mediaSample->Update(_clock->GetStreamTime(),
-                                      (tVoid*)m_imageBuffer,
-                                      m_amplitudeImage.GetSize(),
-                                      IMediaSample::MSF_None)))
+        if (IS_OK(ampMediaSample->Update(_clock->GetStreamTime(),
+                                         (tVoid*)m_ampImgBuffer,
+                                         m_amplitudeImage.GetSize(),
+                                         IMediaSample::MSF_None)))
         {
             LogInfo("Amplitude image transmitted successfully");
-            m_outputAmplitudeImage.Transmit(mediaSample);
+            m_outputAmplitudeImage.Transmit(ampMediaSample);
         }
     }
 
@@ -341,19 +357,20 @@ tResult cTofMotionCameraFilter::SendOutputs()
     memcpy((m_scanDataBuffer + sizeof(sPoint6D<>) + sizeof(m_scanData3D.pointsCount)),
            m_scanData3D.points,
            sizeof(sLidarPoint3D) * m_scanData3D.pointsCount);
+    cObjectPtr<IMediaSample> scanDataMediaSample;
 
     tUInt32 scanDataSize = sizeof(sPoint6D<>) +
                            sizeof(m_scanData3D.pointsCount) +
                            (sizeof(sLidarPoint3D) * m_scanData3D.pointsCount);
     
-    if (IS_OK(AllocMediaSample((tVoid**)&mediaSample, OID_ADTF_MEDIA_SAMPLE)))
+    if (IS_OK(AllocMediaSample((tVoid**)&scanDataMediaSample, OID_ADTF_MEDIA_SAMPLE)))
     {
-        if (IS_OK(mediaSample->Update(_clock->GetStreamTime(),
-                                      (tVoid*)m_scanDataBuffer,
-                                      scanDataSize,
-                                      IMediaSample::MSF_None)))
+        if (IS_OK(scanDataMediaSample->Update(_clock->GetStreamTime(),
+                                              (tVoid*)m_scanDataBuffer,
+                                              scanDataSize,
+                                              IMediaSample::MSF_None)))
         {
-            m_outputScanData.Transmit(mediaSample);
+            m_outputScanData.Transmit(scanDataMediaSample);
         }
     }
 
@@ -373,7 +390,7 @@ tResult cTofMotionCameraFilter::UpdateCameraSettings(const Common::UseLogger::Lo
                                         logLevel,
                                         0,
                                         timeoutUsec);
-    std::string format;
+    std::string format = NULL;
 
     switch (imageFormat)
     {
@@ -432,12 +449,12 @@ tResult cTofMotionCameraFilter::UpdateCameraSettings(const Common::UseLogger::Lo
 
 void cTofMotionCameraFilter::ApplyGain(tUInt8* data, const tUInt8 gain, const tInt size)
 {
-    tFloat deltaIntensity = pow(2.0, gain / 10);
+    tFloat deltaIntensity = pow(2.0, gain / 10.0);
 
     for (tInt i = 0; i < size; i += 2)
     {
         //tUInt16 value = data[i] << 8 | data[i + 1];
-        tUInt16 value = data[i + 1] << 8 | data[i]; // must account for endianness issue with data (flipped here, put back into array flipped)
+        tUInt16 value = data[i + 1] << 8 | data[i]; // must account for endianness issue with data
 
         tUInt32 amplified = static_cast<tUInt32>(value * deltaIntensity);
 
@@ -448,8 +465,9 @@ void cTofMotionCameraFilter::ApplyGain(tUInt8* data, const tUInt8 gain, const tI
 
         value = static_cast<tUInt16>(amplified);
 
-        data[i] = value >> 8;
-        data[i + 1] = value & 0x00FF;
+        //reflip short value when inserting back into array
+        data[i + 1] = value >> 8;
+        data[i] = value & 0x00FF;
     }
 }
 

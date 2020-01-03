@@ -136,7 +136,9 @@ private:
     tInt8 m_distGain;
     tInt8 m_ampGain;
     sScanData3D m_scanData3D;
-    tUInt8* m_imageBuffer;
+    tUInt8* m_distImgBuffer;
+    tUInt8* m_ampImgBuffer;
     tUInt8* m_scanDataBuffer;
+    tUInt8* m_frameBuffer;
 };
 #endif EB_ROBINOS_TOF_MOTION_CAMERA_H

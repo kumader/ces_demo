@@ -20,21 +20,21 @@ void Math3D::RotateScanData(sScanData3D* scanData,
                             const tFloat64 deltaRoll)
 {
     //set up rotation matrices
-    tFloat64 xRotMatrix[3][3] = { {1.0f, 0.0f, 0.0f},
-                                  {0.0f, cos(deltaPitch), sin(deltaPitch)},
-                                  {0.0f, -sin(deltaPitch), cos(deltaPitch)} };
-    tFloat64 yRotMatrix[3][3] = { {cos(deltaYaw), 0.0f, -sin(deltaYaw)},
-                                  {0.0f, 1.0f, 0.0f},
-                                  {sin(deltaYaw), 0.0f, cos(deltaYaw)} };
-    tFloat64 zRotMatrix[3][3] = { {cos(deltaRoll), sin(deltaRoll), 0.0f},
-                                  {-sin(deltaRoll), cos(deltaRoll), 0.0f},
-                                  {0.0f, 0.0f, 1.0f} };
-    tFloat64 xyResult[3][3] = { {0.0f, 0.0f, 0.0f},
-                                {0.0f, 0.0f, 0.0f},
-                                {0.0f, 0.0f, 0.0f} };
-    tFloat64 result[3][3] = { {0.0f, 0.0f, 0.0f},
-                              {0.0f, 0.0f, 0.0f},
-                              {0.0f, 0.0f, 0.0f} };
+    tFloat64 xRotMatrix[3][3] = { {1.0, 0.0, 0.0},
+                                  {0.0, cos(deltaPitch), sin(deltaPitch)},
+                                  {0.0, -sin(deltaPitch), cos(deltaPitch)} };
+    tFloat64 yRotMatrix[3][3] = { {cos(deltaYaw), 0.0, -sin(deltaYaw)},
+                                  {0.0, 1.0, 0.0},
+                                  {sin(deltaYaw), 0.0, cos(deltaYaw)} };
+    tFloat64 zRotMatrix[3][3] = { {cos(deltaRoll), sin(deltaRoll), 0.0},
+                                  {-sin(deltaRoll), cos(deltaRoll), 0.0},
+                                  {0.0, 0.0, 1.0} };
+    tFloat64 xyResult[3][3] = { {0.0, 0.0, 0.0},
+                                {0.0, 0.0, 0.0},
+                                {0.0, 0.0, 0.0} };
+    tFloat64 result[3][3] = { {0.0, 0.0, 0.0},
+                              {0.0, 0.0, 0.0},
+                              {0.0, 0.0, 0.0} };
 
     //concatenate x, y, and z matrices
     Multiply3x3Matrices(xRotMatrix, yRotMatrix, xyResult);
