@@ -287,6 +287,7 @@ tResult cTofMotionCameraFilter::Cycle(__exception)
 
         m_distanceImage.SetBits(startIndex,
                                 m_distanceImage.GetFormat());
+        m_distanceImage.Mirror();
         
         if (m_ampGain > 0)
         {
@@ -297,6 +298,7 @@ tResult cTofMotionCameraFilter::Cycle(__exception)
 
         m_amplitudeImage.SetBits(startIndex + m_distanceImage.GetSize(),
                                  m_amplitudeImage.GetFormat());
+        m_amplitudeImage.Mirror();
 
         Math3D::PopulateScanDataFromDistanceMap(m_distanceImage.GetBitmap(),
                                                 m_distanceImage.GetSize(),
