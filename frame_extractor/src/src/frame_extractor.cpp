@@ -702,7 +702,7 @@ int main(int argc, char* argv[])
 				os << '/' << filename << '.' << outFormatLower;
 				std::string videoOutPath = os.str();
 				std::chrono::seconds streamLengthSec = std::chrono::duration_cast<std::chrono::seconds>(targetStream.timestamp_of_last_item - targetStream.timestamp_of_first_item);
-				double_t frameRate = static_cast<double_t>(targetStream.item_count) / static_cast<double_t>(streamLengthSec.count());
+				double_t frameRate = static_cast<double_t>(targetStream.item_count / (skipRate + 1)) / static_cast<double_t>(streamLengthSec.count());
 
 				if (targetStreams.size() == 1)
 				{
